@@ -1,4 +1,6 @@
-import { GetCursorIndex, HasAfterAndBeforeCursor, HasAfterCursorParam, HasBeforeCursorParam } from "../validations.utils";
+import {
+	GetCursorIndex, GetNextCursor, GetPreviousCursor, HasAfterAndBeforeCursor, HasAfterCursorParam, HasBeforeCursorParam, HasNextPage, HasPreviousPage, SliceNextData, SlicePreviousData
+} from "../validations.utils";
 
 describe('validation.util', () => {
 	
@@ -65,13 +67,326 @@ describe('validation.util', () => {
 
 			expect(result).toBe(-1)
 		})
-	 });
+	});
 
-	describe('HasNextPage', () => {})
-	describe('HasPreviousPage', () => {})
-	describe('GetNextCursor', () => {})
-	describe('GetPreviousCursor', () => {})
-	describe('SlicePreviousData', () => {})
-	describe('SliceNextData', () => {})
+	describe('HasNextPage', () => {
 
-})
+		it('should do not have next page empty data', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [],
+				currentCursorIndex: 0,
+				size: 3
+			});
+
+			expect(hasNextPage).toBeFalsy();
+			
+		});
+
+		it('should do not have next page index 3 size 3', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 3,
+				size: 3
+			});
+
+			expect(hasNextPage).toBeFalsy();
+			
+		});
+
+		it('should have next page index 0 size 3', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 0,
+				size: 3
+			});
+
+			expect(hasNextPage).toBeFalsy();
+			
+		});
+
+		it('should have next page index 0 size 2', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 0,
+				size: 2
+			});
+
+			expect(hasNextPage).toBeTruthy();
+			
+		});
+
+		it('should have next page index 2 size 1', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 2,
+				size: 1
+			});
+
+			expect(hasNextPage).toBeFalsy();
+			
+		});
+
+		it('should have next page index 1 size 1', () => {
+			
+			const hasNextPage = HasNextPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 1,
+				size: 1
+			});
+
+			expect(hasNextPage).toBeTruthy();
+			
+		});
+
+	})
+
+	describe('HasPreviousPage', () => {
+
+		it('should do not have previous page index 0 size 1', () => {
+			const hasPreviousPage = HasPreviousPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 0,
+				size: 1
+			});
+
+			expect(hasPreviousPage).toBeFalsy();
+		});
+
+		it('should do not have previous page index 1 size 2', () => {
+			const hasPreviousPage = HasPreviousPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 1,
+				size: 2
+			});
+
+			expect(hasPreviousPage).toBeFalsy();
+		});
+
+		it('should have previous page index 3 size 2', () => {
+			const hasPreviousPage = HasPreviousPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 3,
+				size: 2
+			});
+
+			expect(hasPreviousPage).toBeTruthy();
+		});
+
+		it('should have previous page index 2 size 1', () => {
+			const hasPreviousPage = HasPreviousPage({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				currentCursorIndex: 2,
+				size: 1
+			});
+
+			expect(hasPreviousPage).toBeTruthy();
+		});
+	});
+
+	describe('GetNextCursor', () => {
+
+		it('should get next cursor: valid_id2', () => {
+			const nextCursor = GetNextCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id1',
+					size: 1
+				}
+			});
+
+			expect(nextCursor).toBe('valid_id2');
+		});
+
+		it('should get next cursor: valid_id4', () => {
+			const nextCursor = GetNextCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id2',
+					size: 2
+				}
+			});
+
+			expect(nextCursor).toBe('valid_id4');
+		});
+
+		it('should get next cursor: valid_id4', () => {
+			const nextCursor = GetNextCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id2',
+					size: 5
+				}
+			});
+
+			expect(nextCursor).toBe('valid_id4');
+		});
+
+		it('should get last position if not provide after and size', () => {
+			const nextCursor = GetNextCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {}
+			});
+
+			expect(nextCursor).toBe('valid_id4');
+		});
+
+	});
+
+	describe('GetPreviousCursor', () => {
+
+		it('should get previous cursor: valid_id2', () => {
+			const beforeCursor = GetPreviousCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id4',
+					size: 1
+				}
+			});
+
+			expect(beforeCursor).toBe('valid_id2');
+		});
+
+		it('should get previous cursor: valid_id1', () => {
+			const beforeCursor = GetPreviousCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id4',
+					size: 2
+				}
+			});
+
+			expect(beforeCursor).toBe('valid_id1');
+		});
+
+		it('should get previous cursor: valid_id1', () => {
+			const beforeCursor = GetPreviousCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id4',
+					size: 5
+				}
+			});
+
+			expect(beforeCursor).toBe('valid_id1');
+		});
+
+		it('should get first position if not provide before and size', () => {
+			const beforeCursor = GetPreviousCursor({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {}
+			});
+
+			expect(beforeCursor).toBe('valid_id1');
+		});
+
+	});
+
+	describe('SlicePreviousData', () => {
+
+		it('should slice 2 items', () => {
+			const result = SlicePreviousData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id3',
+					size: 2
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id1' }, { id: 'valid_id2' }]);
+		});
+
+		it('should slice 2 items', () => {
+			const result = SlicePreviousData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id3',
+					size: 5
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id1' }, { id: 'valid_id2' }]);
+		});
+
+		
+		it('should slice 1 items', () => {
+			const result = SlicePreviousData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id3',
+					size: 1
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id2' }]);
+		});
+
+		it('should slice empty', () => {
+			const result = SlicePreviousData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					before: 'valid_id1',
+					size: 1
+				}
+			});
+
+			expect(result).toEqual([]);
+		});
+
+	});
+
+	describe('SliceNextData', () => {
+		it('should slice empty', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id4',
+					size: 1
+				}
+			});
+
+			expect(result).toEqual([]);
+		});
+
+		it('should slice all', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id1',
+					size: 10
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }]);
+		});
+
+		it('should slice 1 item', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id1',
+					size: 1
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id2' }]);
+		});
+
+		it('should slice 2 items', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					after: 'valid_id2',
+					size: 2
+				}
+			});
+
+			expect(result).toEqual([{ id: 'valid_id3' }, { id: 'valid_id4' }]);
+		});
+	});
+
+});

@@ -49,5 +49,6 @@ export type IGetNextCursor = <T extends IDefaultProps>(params: IPaginatorParams<
 export type IGetPreviousCursor = <T extends IDefaultProps>(params: IPaginatorParams<T>) => string | undefined;
 export type ISlicePreviousData = <T  extends IDefaultProps>(params: IPaginatorParams<T>) => T[];
 export type ISliceNextData = <T extends IDefaultProps>(params: IPaginatorParams<T>) => T[];
+export type IValidateSize = (size: number) => boolean;
 
-export type IPaginator = <T>(params: IPaginatorParams<T>) => IPaginatorResult<T>;
+export type IPaginator = <T extends IDefaultProps>(params: IPaginatorParams<T>) => IPaginatorResult<T>;
