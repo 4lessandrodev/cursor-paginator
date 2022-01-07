@@ -9,7 +9,7 @@ const result = Paginator({
 	data: dbData,
 	params: {
 		size: 7,
-		after: 'cursorxyz'
+		after: 'cursor_xyz'
 	}
 });
 
@@ -28,7 +28,7 @@ const result = Paginator({
 	data: dbData,
 	params: {
 		size: 7,
-		before: 'cursorxyz'
+		before: 'cursor_xyz'
 	}
 });
 
