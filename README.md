@@ -2,7 +2,7 @@
 
 ```ts
 
-import { Paginator } from 'lib/core/paginator';
+import { Paginator } from 'paginator';
 
 // using after cursor
 const result = Paginator({

@@ -1,4 +1,4 @@
-import Paginator from "./paginator";
+import Paginator from "../../lib/core/paginator";
 
 describe('paginator.ts', () => {
 	
@@ -102,7 +102,7 @@ describe('paginator.ts', () => {
 		try {
 			Paginator({ data: fakeData, params: { after: 'valid', before: 'valid' } });
 		} catch (error: any) {
-			expect(error.message).toBe('use after or before as cursor param');
+			expect(error.message).toBe('Paginator: use after or before as cursor param');
 		}
 	});
 
@@ -112,7 +112,30 @@ describe('paginator.ts', () => {
 		try {
 			Paginator({ data: fakeData, params: { size: -2 } });
 		} catch (error: any) {
-			expect(error.message).toBe('size param must be a positive number');
+			expect(error.message).toBe('Paginator: size param must be a positive number');
+		}
+	});
+
+	it('should get start array if provide an invalid id', () => {
+
+		const result = Paginator({ data: fakeData, params: { size: 3, after: 'invalid_id' } });
+		expect(result.data).toHaveLength(3);
+		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
+		expect(result.pageInfo.hasNextPage).toBeTruthy();
+		expect(result.data).toEqual([{ id: '1' }, { id: '2' }, { id: '3' }]);
+
+	});
+
+	it('should throws if some attribute on data does not have id attribute', () => {
+		expect.assertions(1);
+
+		try {
+			
+			fakeData[5] = { name: 'some name' } as any;
+			Paginator({ data: fakeData, params: { size: 3 } });
+
+		} catch (error: any) {
+			expect(error.message).toBe('Paginator: all records on data must have id attribute');
 		}
 	});
 	

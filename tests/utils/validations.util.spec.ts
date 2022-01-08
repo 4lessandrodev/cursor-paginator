@@ -1,9 +1,113 @@
 import {
-	GetCursorIndex, GetNextCursor, GetPreviousCursor, HasAfterAndBeforeCursor, HasAfterCursorParam, HasBeforeCursorParam, HasNextPage, HasPreviousPage, SliceNextData, SlicePreviousData
-} from "../validations.utils";
+	ExistId,
+	GetCursorIndex, GetNextAndPrevPagination, GetNextCursor, GetPreviousCursor, HasAfterAndBeforeCursor, HasAfterCursorParam, HasBeforeCursorParam, HasNextPage, HasPreviousPage, SliceNextData, SlicePreviousData, ValidateProps
+} from "../../lib/utils/validations.utils";
 
 describe('validation.util', () => {
+
+	describe('ValidateProps', () => {
+
+		it('should to throw if provide after and before', () => {
+			
+			const toThrow = () => ValidateProps({
+				data: [{ id: 'valid' }], params: { after: 'param', before: 'param' }
+			});
+			expect(toThrow).toThrowError('Paginator: use after or before as cursor param');
+
+		});
+
+		it('should to throw if any data record does not have id', () => {
+			
+			const toThrow = () => ValidateProps({
+				data: [{ id: 'valid' }, { } as any], params: { }
+			});
+			expect(toThrow).toThrowError('Paginator: all records on data must have id attribute');
+
+		});
+
+		it('should to throw if provide a negative size', () => {
+			
+			const toThrow = () => ValidateProps({
+				data: [{ id: 'valid' }], params: { size: -1 }
+			});
+			expect(toThrow).toThrowError('Paginator: size param must be a positive number');
+
+		});
+
+	})
 	
+	describe('validate id', () => {
+		
+		it('should do not have id attribute', () => {
+			const data = { name: 'some' };
+			const result = ExistId(data);
+
+			expect(result).toBeFalsy();
+		});
+
+		it('should do not have id attribute', () => {
+			const data = { id: undefined };
+			const result = ExistId(data);
+
+			expect(result).toBeFalsy();
+		});
+
+		it('should have id attribute', () => {
+			const data = { id: 'valid_id', name: 'some' };
+			const result = ExistId(data);
+
+			expect(result).toBeTruthy();
+		});
+
+		it('should have id attribute', () => {
+			const data = { id: 1, name: 'some' };
+			const result = ExistId(data);
+
+			expect(result).toBeTruthy();
+		});
+
+	});
+
+	describe('GetNextAndPrevPagination', () => {
+
+		it('should do not have hasNextPage and hasPreviousPage if provide empty', () => {
+			
+			const result = GetNextAndPrevPagination({ dataPayload: [], originalData: [] });
+			expect(result).toEqual({ hasNextPage: false, hasPreviousPage: false });
+
+		});
+
+		it('should have hasNextPage and hasPreviousPage', () => {
+			
+			const originalData = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
+			const dataPayload = [{ id: '2' }, { id: '3' }];
+
+			const result = GetNextAndPrevPagination({ dataPayload, originalData });
+			expect(result).toEqual({ hasNextPage: true, hasPreviousPage: true });
+
+		});
+
+		it('should have hasNextPage and not hasPreviousPage', () => {
+			
+			const originalData = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
+			const dataPayload = [{ id: '1' }, { id: '2' }, { id: '3' }];
+
+			const result = GetNextAndPrevPagination({ dataPayload, originalData });
+			expect(result).toEqual({ hasNextPage: true, hasPreviousPage: false });
+
+		});
+
+		it('should have hasPreviousPage and not hasNextPage', () => {
+			
+			const originalData = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
+			const dataPayload = [{ id: '3' }, { id: '4' }, { id: '5' }];
+
+			const result = GetNextAndPrevPagination({ dataPayload, originalData });
+			expect(result).toEqual({ hasNextPage: false, hasPreviousPage: true });
+
+		});
+	});
+
 	describe('HasAfterCursorParam', () => {
 
 		it('should have after cursor', () => {

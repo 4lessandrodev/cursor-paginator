@@ -38,6 +38,21 @@ export interface IHasNestCursor<T> {
 	size: number;
 }
 
+export interface INode<T> {
+	node: T;
+	cursor: string;
+}
+
+export interface IGetRangeParams<T> {
+	originalData: T[];
+	dataPayload: T[];
+}
+
+export interface IHasNextAndPrev {
+	hasPreviousPage: boolean;
+	hasNextPage: boolean;
+}
+
 export type IHasAfterCursor = (params: IParams) => boolean;
 export type IHasBeforeCursor = (params: IParams) => boolean;
 export type IHasAfterAndBeforeCursor = (params: IParams) => boolean;
@@ -50,5 +65,9 @@ export type IGetPreviousCursor = <T extends IDefaultProps>(params: IPaginatorPar
 export type ISlicePreviousData = <T  extends IDefaultProps>(params: IPaginatorParams<T>) => T[];
 export type ISliceNextData = <T extends IDefaultProps>(params: IPaginatorParams<T>) => T[];
 export type IValidateSize = (size: number) => boolean;
+export type IDataToNode = <T extends IDefaultProps>(data: T[]) => Array<INode<T>>;
+export type IExistId = <T>(data: T) => boolean;
+export type IGetNextAndPrevPagination = <T extends IDefaultProps>(props: IGetRangeParams<T>) => IHasNextAndPrev;
+export type IValidateProps = <T extends IDefaultProps>(params: IPaginatorParams<T>) => void;
 
 export type IPaginator = <T extends IDefaultProps>(params: IPaginatorParams<T>) => IPaginatorResult<T>;

@@ -15,9 +15,16 @@ import {
 	ISlicePreviousData,
 	ISliceNextData,
 	IDefaultProps,
-	IValidateSize
-} from "../../types";
-import { defaultPerPageSize } from "../core/paginator";
+	IValidateSize,
+	IExistId,
+	IGetNextAndPrevPagination,
+	IHasNextAndPrev,
+	IGetRangeParams,
+	IValidateProps
+} from "../types";
+import CustomError from "./error";
+
+export const defaultPerPageSize = 25;
 
 
 
@@ -36,6 +43,8 @@ export const GetCursorIndex: IGetCursorIndex = <T extends IDefaultProps>(params:
 }
 
 export const IsValidSize: IValidateSize = (size: number): boolean => (typeof size === "number" && size >= 0);
+
+export const ExistId: IExistId = <T>(record: T): boolean => typeof record?.['id'] !== 'undefined';
 
 export const HasNextPage: IHasNextPage = <T>(params: IHasNestCursor<T>): boolean => {
 	const dataLength = params.data.length - 1;
@@ -116,6 +125,21 @@ export const GetPreviousCursor: IGetPreviousCursor = <T extends IDefaultProps>(
 	return previousCursor;
 }
 
+export const GetNextAndPrevPagination: IGetNextAndPrevPagination = <T extends IDefaultProps>(
+	{ originalData, dataPayload }: IGetRangeParams<T>
+): IHasNextAndPrev => {
+
+	const dataLength = originalData.length - 1;
+
+	const firstIndex = originalData.findIndex((item) => item.id === dataPayload[0].id);
+	const latIndex = originalData.findIndex((item) => item.id === dataPayload[dataPayload.length - 1].id);
+
+	const hasPreviousPage = firstIndex > 0;
+	const hasNextPage = latIndex < dataLength;
+
+	return { hasNextPage, hasPreviousPage }
+}
+
 export const SlicePreviousData: ISlicePreviousData = <T extends IDefaultProps>(props: IPaginatorParams<T>): T[] => {
 	const data = props.data;
 	const cursor = props.params.before ?? '';
@@ -173,4 +197,44 @@ export const SliceNextData: ISliceNextData = <T extends IDefaultProps>(props: IP
 
 	return data.slice(currentCursorIndex);
 
+}
+
+export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => {
+
+	const hasAfterAndBeforeCursor = HasAfterAndBeforeCursor(props.params);
+	const size = props.params.size ?? defaultPerPageSize;
+
+	props.data.forEach((data): void => {
+		if (!ExistId(data)) {
+			throw new CustomError(
+				{
+					message: "Paginator: all records on data must have id attribute",
+					stack: JSON.stringify(data),
+					name: 'Paginator'
+				}
+			);
+		}
+	});
+
+	if (hasAfterAndBeforeCursor) {
+		throw new CustomError(
+			{
+				message: "Paginator: use after or before as cursor param",
+				stack: JSON.stringify(props.params),
+				name: 'Paginator'
+			}
+		);
+	}
+
+	const isValidSize = IsValidSize(size);
+
+	if (!isValidSize) {
+		throw new CustomError(
+			{
+				message: "Paginator: size param must be a positive number",
+				stack: JSON.stringify(props.params),
+				name: 'Paginator'
+			}
+		);
+	}
 }
