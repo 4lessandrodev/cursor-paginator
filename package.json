@@ -1,7 +1,7 @@
 {
 	"name": "ts-paginate",
-	"version": "1.0.0",
-	"description": "This package provide pagination tool",
+	"version": "1.0.1",
+	"description": "This package provide pagination to any data records that has id attribute",
 	"main": "dist/index.js",
 	"types": "dist/index.d.js",
 	"license": "ISC",
@@ -12,7 +12,10 @@
 		"Edges",
 		"Cursor Pagination",
 		"Offset Data",
-		"Limit Data"
+		"Limit Data",
+		"Paginate",
+		"Ts-paginate",
+		"Node Paginate"
 	],
 	"engines": {
 		"node": ">=14"
@@ -35,12 +38,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/4lessandrodev/cursor-paginator.git"
+		"url": "git+https://github.com/4lessandrodev/ts-paginate.git"
 	},
 	"bugs": {
-		"url": "https://github.com/4lessandrodev/cursor-paginator/issues"
+		"url": "https://github.com/4lessandrodev/ts-paginate/issues"
 	},
-	"homepage": "https://github.com/4lessandrodev/cursor-paginator",
+	"homepage": "https://github.com/4lessandrodev/ts-paginate",
 	"files": [
 		"dist/*",
 		"package.json"
