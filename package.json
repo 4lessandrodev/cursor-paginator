@@ -1,6 +1,6 @@
 {
 	"name": "ts-paginate",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "This package provide pagination to any data records that has id attribute",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

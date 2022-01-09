@@ -106,22 +106,20 @@ export const GetPreviousCursor: IGetPreviousCursor = <T extends IDefaultProps>(
 	const size = props.params?.size ?? defaultPerPageSize;
 	const dataLength = props.data.length - 1;
 
-	let previousPosition = dataLength;
+	let previousPosition = 0;
 
 	let currentCursor = GetCursorIndex({
 		cursor: props.params.before ?? props.data[0]?.id ?? '',
 		data: props.data
 	});
-	if (currentCursor === -1){
-		currentCursor = dataLength;
-	}
 	
-	if (currentCursor >= 0 && currentCursor <= dataLength) {
+	if (currentCursor >= 1 && currentCursor <= dataLength) {
 		previousPosition = (currentCursor - size) - 1;
 	}
 
-	const previousCursor = (size <= 0 || previousPosition < 0) ? props.data[0]?.id : props.data[previousPosition]?.id;
-
+	const previousCursor = (size <= 0 || previousPosition < 0 || currentCursor < 1) ?
+		props.data[0]?.id : props.data[previousPosition]?.id;
+	
 	return previousCursor;
 }
 
@@ -131,8 +129,8 @@ export const GetNextAndPrevPagination: IGetNextAndPrevPagination = <T extends ID
 
 	const dataLength = originalData.length - 1;
 
-	const firstIndex = originalData.findIndex((item) => item.id === dataPayload[0].id);
-	const latIndex = originalData.findIndex((item) => item.id === dataPayload[dataPayload.length - 1].id);
+	const firstIndex = originalData.findIndex((item) => item?.id === dataPayload[0]?.id);
+	const latIndex = originalData.findIndex((item) => item?.id === dataPayload[dataPayload.length - 1]?.id);
 
 	const hasPreviousPage = firstIndex > 0;
 	const hasNextPage = latIndex < dataLength;
