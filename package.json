@@ -1,5 +1,5 @@
 {
-	"name": "paginator",
+	"name": "ts-paginate",
 	"version": "1.0.0",
 	"description": "This package provide pagination tool",
 	"main": "dist/index.js",

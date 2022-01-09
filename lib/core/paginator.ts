@@ -61,7 +61,7 @@ import {
  *	}
  * 
  */
-export const paginator: IPaginator = <T extends IDefaultProps>(props: IPaginatorParams<T>): IPaginatorResult<T> => {
+export const paginate: IPaginator = <T extends IDefaultProps>(props: IPaginatorParams<T>): IPaginatorResult<T> => {
 
 	const size = props.params.size ?? defaultPerPageSize;
 	const originalData = props.data;
@@ -116,4 +116,4 @@ export const paginator: IPaginator = <T extends IDefaultProps>(props: IPaginator
 	}
 }
 
-export default paginator;
+export default paginate;
