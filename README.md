@@ -2,7 +2,9 @@
 
 This lib paginate any data as array of records using id attribute as cursor. 
 
-> All record must to have id attribute.
+> All record must have id attribute.
+
+Install `npm install ts-paginate` or `yarn add ts-paginate`
 
 ```ts
 
