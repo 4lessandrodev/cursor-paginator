@@ -205,11 +205,27 @@ describe('paginate.ts', () => {
 
 	it('should get start array if provide an invalid id', () => {
 
-		const result = paginate({ data: fakeData, params: { size: 3, after: 'invalid_id' } });
-		expect(result.data).toHaveLength(3);
-		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
-		expect(result.pageInfo.hasNextPage).toBeTruthy();
-		expect(result.data).toEqual([{ id: '1' }, { id: '2' }, { id: '3' }]);
+		expect.assertions(1);
+		try {
+			
+			paginate({ data: fakeData, params: { size: 3, after: 'invalid_id' } });
+
+		} catch (error: any) {
+			expect(error.message).toBe('provided cursor: invalid_id does not exits on data')
+		}
+
+	});
+
+	it('should get start array if provide an invalid id', () => {
+
+		expect.assertions(1);
+		try {
+			
+			paginate({ data: fakeData, params: { size: 3, before: 'invalid_id' } });
+
+		} catch (error: any) {
+			expect(error.message).toBe('provided cursor: invalid_id does not exits on data')
+		}
 
 	});
 

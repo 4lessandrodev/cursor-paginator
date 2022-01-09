@@ -204,17 +204,19 @@ export const SliceNextData: ISliceNextData = <T extends IDefaultProps>(props: IP
 
 }
 
-export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => {
+export const ValidateProps: IValidateProps = <T extends IDefaultProps>(props: IPaginatorParams<T>) => {
 
 	const hasAfterAndBeforeCursor = HasAfterAndBeforeCursor(props.params);
 	const size = props.params.size ?? defaultPerPageSize;
+	const cursor = props.params.after ?? props.params.before;
+	const data = props.data;
 
-	props.data.forEach((data): void => {
-		if (!ExistId(data)) {
+	data.forEach((reg): void => {
+		if (!ExistId(reg)) {
 			throw new CustomError(
 				{
 					message: "paginate: all records on data must have id attribute",
-					stack: JSON.stringify(data),
+					stack: JSON.stringify(reg),
 					name: 'paginate'
 				}
 			);
@@ -241,5 +243,17 @@ export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => 
 				name: 'paginate'
 			}
 		);
+	}
+
+	if (cursor) {
+		const index = data.findIndex((reg) => reg?.id === cursor);
+		if (index === -1) {
+			throw new CustomError({
+				message: `provided cursor: ${cursor} does not exits on data`,
+				name: 'paginate',
+				stack: JSON.stringify(props.params)
+			})
+			
+		}
 	}
 }

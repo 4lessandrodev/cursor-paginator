@@ -18,7 +18,7 @@ export const makeFakeUsers = (quantity: number):IUser[] => {
 	}
 
 	// create users
-	for (let index = 0; index <= quantity; index++) {
+	for (let index = 1; index <= quantity + 1; index++) {
 		const user: IUser = {
 			id: String(index),
 			name: `some name ${index}`,
