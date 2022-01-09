@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### 1.0.3 - 2022-01-09
+
+### Fixed
+
+- Limits - fix limits. if provide before as first or after as last cursor returns an empty data.
+
+---
+
 ### 1.0.2 - 2022-01-09
 
 ### Fixed

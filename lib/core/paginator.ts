@@ -7,7 +7,7 @@ import {
 	SliceNextData, SlicePreviousData, ValidateProps,
 } from "../utils/validations.utils";
 import {
-	IDefaultProps, IPaginator,
+	IDefaultProps, IHasNextAndPrev, IPaginator,
 	IPaginatorParams, IPaginatorResult
 } from "../types/types";
 
@@ -66,6 +66,12 @@ export const paginate: IPaginator = <T extends IDefaultProps>(props: IPaginatorP
 	const size = props.params.size ?? defaultPerPageSize;
 	const originalData = props.data;
 	const dataLength = props.data.length - 1;
+	const firstLimitCursor = props.data[0]?.id;
+	const lastLimitCursor = props.data[dataLength]?.id;
+	const pagination: IHasNextAndPrev = {
+		hasPreviousPage: false,
+		hasNextPage: false
+	};
 
 	let dataPayload: T[] = [];
 	let currentCursor: string | undefined = undefined;
@@ -79,28 +85,61 @@ export const paginate: IPaginator = <T extends IDefaultProps>(props: IPaginatorP
 	// CALLS AFTER LOGIC 
 	if (isAfter) {
 		currentCursor = props.params.after;
-		dataPayload = SliceNextData<T>({ data: originalData, params: props.params });
-		nextCursor = GetNextCursor({ data: originalData, params: { after: currentCursor, size: size }});
+		// COULD NOT GOES AFTER LIMIT 
+		if (currentCursor !== lastLimitCursor) {
+			dataPayload = SliceNextData<T>({ data: originalData, params: props.params });
+			nextCursor = GetNextCursor({ data: originalData, params: { after: currentCursor, size: size }});
+		} else {
+			// IF AFTER LIMIT RETURNS AN EMPTY RESULT
+			dataPayload = [];
+			nextCursor = props.params.after;
+		}
 		previousCursor = GetPreviousCursor({ data: originalData, params: { before: currentCursor, size: size } });
 	}
 	
 	const isBefore = HasBeforeCursorParam(props.params);
 	// CALLS BEFORE LOGIC
 	if (isBefore) {
+		// COULD NOT GOES BEFORE START LIMIT
 		currentCursor = props.params.before;
-		dataPayload = SlicePreviousData<T>({ data: originalData, params: props.params });
+		if (currentCursor !== firstLimitCursor) {
+			dataPayload = SlicePreviousData<T>({ data: originalData, params: props.params });
+			previousCursor = GetPreviousCursor({ data: originalData, params: { before: currentCursor, size: size } });
+		} else {
+			// IF BEFORE START RETURNS AN EMPTY RESULT
+			dataPayload = [];
+			previousCursor = props.params.before;
+		}
 		nextCursor = GetNextCursor({ data: originalData, params: { after: currentCursor, size: size }});
-		previousCursor = GetPreviousCursor({ data: originalData, params: { before: currentCursor, size: size } });
 	}
 	
 	// CALLS DEFAULT LOGIC
 	if (!isBefore && !isAfter) {
+		currentCursor = originalData[0]?.id;
 		dataPayload = SlicePreviousData<T>({ data: originalData, params: props.params });
 		nextCursor = GetNextCursor({ data: originalData, params: { after: currentCursor, size: size }});
 		previousCursor = GetPreviousCursor({ data: originalData, params: { before: currentCursor, size: size } });
 	}
 	
-	const pagination = GetNextAndPrevPagination({ dataPayload, originalData })
+	// VALIDATE IF IS EMPTY DATA
+	if (dataPayload.length > 0) {
+		const result = GetNextAndPrevPagination({ dataPayload, originalData })
+		pagination.hasNextPage = result.hasNextPage;
+		pagination.hasPreviousPage = result.hasPreviousPage;
+	} else {
+		// IF IS EMPTY DATA GET LOCATION FROM ORIGINAL DATA
+		const originalCursorIndex = originalData.findIndex((data) => data?.id === currentCursor);
+		if (originalCursorIndex > 0 && dataLength > 0) {
+			pagination.hasNextPage = false;
+			pagination.hasPreviousPage = true;
+		} else if (originalCursorIndex < dataLength && dataLength > 0) {
+			pagination.hasNextPage = true;
+			pagination.hasPreviousPage = false;
+		} else {
+			pagination.hasNextPage = false;
+			pagination.hasPreviousPage = false;
+		}
+	}
 
 	// RETURN RESULT
 	return {

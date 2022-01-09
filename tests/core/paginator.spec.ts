@@ -56,6 +56,49 @@ describe('paginate.ts', () => {
 		expect(result.data[6].id).toBe('37');
 	});
 
+	it('should return a empty data if provide the last cursor', () => {
+		const result = paginate({
+			data: fakeData,
+			params: {
+				size: 10,
+				after: '41'
+			}
+		});
+
+		expect(result.pageInfo).toEqual({
+			hasNextPage: false,
+			hasPreviousPage: true,
+			totalCount: 40,
+			currentCursor: '41',
+			nextCursor: '41',
+			previousCursor: '30'
+		})
+		expect(result.data).toHaveLength(0);
+		expect(result.data).toEqual([]);
+	});
+
+	it('should return a empty data if provide the first cursor', () => {
+		const result = paginate({
+			data: fakeData,
+			params: {
+				size: 10,
+				before: '1'
+			}
+		});
+
+		expect(result.pageInfo).toEqual({
+			hasNextPage: true,
+			hasPreviousPage: false,
+			totalCount: 40,
+			currentCursor: '1',
+			nextCursor: '11',
+			previousCursor: '1'
+		})
+		expect(result.data).toHaveLength(0);
+		expect(result.data).toEqual([]);
+	});
+
+
 	it('should paginate 3 items after position 1º', () => {
 		const result = paginate({
 			data: fakeData,
@@ -90,7 +133,7 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: false,
 			totalCount: 40,
-			currentCursor: undefined,
+			currentCursor: '1',
 			nextCursor: '4',
 			previousCursor: '1'
 		})
