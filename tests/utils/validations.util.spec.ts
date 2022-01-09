@@ -456,6 +456,32 @@ describe('validation.util', () => {
 			expect(result).toEqual([]);
 		});
 
+		it('should slice the end', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					size: 2
+				}
+			});
+
+			expect(result).toHaveLength(2);
+			expect(result).toEqual([{ id: 'valid_id3' }, { id: 'valid_id4' }])
+		});
+
+
+		it('should slice the end', () => {
+			const result = SliceNextData({
+				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],
+				params: {
+					size: 5,
+					after: 'valid_id2'
+				}
+			});
+
+			expect(result).toHaveLength(2);
+			expect(result).toEqual([{ id: 'valid_id3' }, { id: 'valid_id4' }])
+		});
+
 		it('should slice all', () => {
 			const result = SliceNextData({
 				data: [{ id: 'valid_id1' }, { id: 'valid_id2' }, { id: 'valid_id3' }, { id: 'valid_id4' }],

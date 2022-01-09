@@ -152,21 +152,28 @@ export const SlicePreviousData: ISlicePreviousData = <T extends IDefaultProps>(p
 
 	const index = GetCursorIndex({ cursor, data });
 
-	const currentCursorIndex = index === -1 ? 0 : index;
+	const currentCursorIndex = (index < 1) ? 0 : index;
 
 	const hasPreviousPage = HasPreviousPage({ currentCursorIndex, data, size });
 
-	const reverseData = data.reverse();
+	const startPos = currentCursorIndex - size;
+
+	if (startPos < 1) {
+		
+		return data.slice(0, currentCursorIndex);
+	}
 
 	if (hasPreviousPage) {
-		return reverseData.slice(currentCursorIndex, currentCursorIndex + size).reverse();
+
+		return data.slice(startPos, currentCursorIndex);
+
 	}
 
 	if (currentCursorIndex === 0){
 		return [];
 	}
 
-	return reverseData.slice(currentCursorIndex).reverse();
+	return data.slice(0, size);
 
 }
 

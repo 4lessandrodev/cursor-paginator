@@ -34,6 +34,28 @@ describe('paginator.ts', () => {
 		expect(result.data[6].id).toBe('22');
 	});
 
+	it('should paginate 7 items before position 30º', () => {
+		const result = Paginator({
+			data: fakeData,
+			params: {
+				size: 7,
+				after: '30'
+			}
+		});
+
+		expect(result.pageInfo).toEqual({
+			hasNextPage: true,
+			hasPreviousPage: true,
+			totalCount: 40,
+			currentCursor: '30',
+			nextCursor: '37',
+			previousCursor: '22'
+		})
+		expect(result.data).toHaveLength(7);
+		expect(result.data[0].id).toBe('31');
+		expect(result.data[6].id).toBe('37');
+	});
+
 	it('should paginate 3 items after position 1º', () => {
 		const result = Paginator({
 			data: fakeData,
@@ -93,6 +115,28 @@ describe('paginator.ts', () => {
 			currentCursor: '35',
 			nextCursor: '1',
 			previousCursor: '27'
+		});
+	});
+
+
+	it('should paginate to before', () => {
+		const result = Paginator({
+			data: fakeData,
+			params: {
+				size: 3,
+				before: '35'
+			}
+		});
+
+		expect(result.data).toEqual([{ id: '32' }, { id: '33' }, { id: '34' } ])
+
+		expect(result.pageInfo).toEqual({
+			hasNextPage: true,
+			hasPreviousPage: true,
+			totalCount: 40,
+			currentCursor: '35',
+			nextCursor: '38',
+			previousCursor: '31'
 		});
 	});
 
