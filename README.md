@@ -1,6 +1,6 @@
 # ts-paginate
 
-This lib paginate any data as array of records using id attribute as cursor. 
+This lib paginate any data as array of records using id attribute as cursor.
 
 > All record must have id attribute.
 
@@ -11,7 +11,7 @@ Install `npm install ts-paginate` or `yarn add ts-paginate`
 import { paginate } from 'ts-paginate';
 
 // using after cursor
-const result = Paginate({
+const result = paginate({
 	data: dbData,
 	params: {
 		size: 7,
@@ -30,7 +30,7 @@ console.log(result.pageInfo);
 }`
 
 // using before cursor
-const result = Paginate({
+const result = paginate({
 	data: dbData,
 	params: {
 		size: 7,
@@ -49,7 +49,7 @@ Transform data payload to graphQL node
 import { paginate, dataToNode } from 'ts-paginate';
 
 
-const result = Paginate({
+const result = paginate({
 	data: usersData,
 	params: {
 		size: 50,
