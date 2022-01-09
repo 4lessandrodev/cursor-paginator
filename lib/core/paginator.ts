@@ -9,7 +9,7 @@ import {
 import {
 	IDefaultProps, IPaginator,
 	IPaginatorParams, IPaginatorResult
-} from "../types";
+} from "../types/types";
 
 
 /**

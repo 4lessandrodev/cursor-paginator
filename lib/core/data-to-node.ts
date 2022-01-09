@@ -1,4 +1,4 @@
-import { IDefaultProps, INode, IDataToNode } from "../types";
+import { IDefaultProps, INode, IDataToNode } from "../types/types";
 
 /**
  * 

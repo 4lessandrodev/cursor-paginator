@@ -1,7 +1,7 @@
 import {
 	ExistId,
 	GetCursorIndex, GetNextAndPrevPagination, GetNextCursor, GetPreviousCursor, HasAfterAndBeforeCursor, HasAfterCursorParam, HasBeforeCursorParam, HasNextPage, HasPreviousPage, SliceNextData, SlicePreviousData, ValidateProps
-} from "../../lib/utils/validations.utils";
+} from '../../lib/utils';
 
 describe('validation.util', () => {
 
@@ -12,7 +12,7 @@ describe('validation.util', () => {
 			const toThrow = () => ValidateProps({
 				data: [{ id: 'valid' }], params: { after: 'param', before: 'param' }
 			});
-			expect(toThrow).toThrowError('Paginator: use after or before as cursor param');
+			expect(toThrow).toThrowError('paginate: use after or before as cursor param');
 
 		});
 
@@ -21,7 +21,7 @@ describe('validation.util', () => {
 			const toThrow = () => ValidateProps({
 				data: [{ id: 'valid' }, { } as any], params: { }
 			});
-			expect(toThrow).toThrowError('Paginator: all records on data must have id attribute');
+			expect(toThrow).toThrowError('paginate: all records on data must have id attribute');
 
 		});
 
@@ -30,7 +30,7 @@ describe('validation.util', () => {
 			const toThrow = () => ValidateProps({
 				data: [{ id: 'valid' }], params: { size: -1 }
 			});
-			expect(toThrow).toThrowError('Paginator: size param must be a positive number');
+			expect(toThrow).toThrowError('paginate: size param must be a positive number');
 
 		});
 

@@ -1,4 +1,4 @@
-import { dataToNode } from '../../lib/core/data-to-node';
+import { dataToNode } from '../../lib/index';
 
 describe('data-to-node', () => {
 

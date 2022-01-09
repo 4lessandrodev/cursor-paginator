@@ -1,6 +1,6 @@
-import Paginator from "../../lib/core/paginator";
+import { paginate } from "../../lib";
 
-describe('paginator.ts', () => {
+describe('paginate.ts', () => {
 	
 	interface IFake {
 		id: string;
@@ -13,7 +13,7 @@ describe('paginator.ts', () => {
 	}
 
 	it('should paginate 7 items after position 15º', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 7,
@@ -35,7 +35,7 @@ describe('paginator.ts', () => {
 	});
 
 	it('should paginate 7 items before position 30º', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 7,
@@ -57,7 +57,7 @@ describe('paginator.ts', () => {
 	});
 
 	it('should paginate 3 items after position 1º', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 3,
@@ -79,7 +79,7 @@ describe('paginator.ts', () => {
 	});
 
 	it('should paginate 3 items 1-3', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 3
@@ -100,7 +100,7 @@ describe('paginator.ts', () => {
 	});
 
 	it('should do not have next page', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 7,
@@ -120,7 +120,7 @@ describe('paginator.ts', () => {
 
 
 	it('should paginate to before', () => {
-		const result = Paginator({
+		const result = paginate({
 			data: fakeData,
 			params: {
 				size: 3,
@@ -144,9 +144,9 @@ describe('paginator.ts', () => {
 		expect.assertions(1);
 
 		try {
-			Paginator({ data: fakeData, params: { after: 'valid', before: 'valid' } });
+			paginate({ data: fakeData, params: { after: 'valid', before: 'valid' } });
 		} catch (error: any) {
-			expect(error.message).toBe('Paginator: use after or before as cursor param');
+			expect(error.message).toBe('paginate: use after or before as cursor param');
 		}
 	});
 
@@ -154,15 +154,15 @@ describe('paginator.ts', () => {
 		expect.assertions(1);
 
 		try {
-			Paginator({ data: fakeData, params: { size: -2 } });
+			paginate({ data: fakeData, params: { size: -2 } });
 		} catch (error: any) {
-			expect(error.message).toBe('Paginator: size param must be a positive number');
+			expect(error.message).toBe('paginate: size param must be a positive number');
 		}
 	});
 
 	it('should get start array if provide an invalid id', () => {
 
-		const result = Paginator({ data: fakeData, params: { size: 3, after: 'invalid_id' } });
+		const result = paginate({ data: fakeData, params: { size: 3, after: 'invalid_id' } });
 		expect(result.data).toHaveLength(3);
 		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
 		expect(result.pageInfo.hasNextPage).toBeTruthy();
@@ -176,10 +176,10 @@ describe('paginator.ts', () => {
 		try {
 			
 			fakeData[5] = { name: 'some name' } as any;
-			Paginator({ data: fakeData, params: { size: 3 } });
+			paginate({ data: fakeData, params: { size: 3 } });
 
 		} catch (error: any) {
-			expect(error.message).toBe('Paginator: all records on data must have id attribute');
+			expect(error.message).toBe('paginate: all records on data must have id attribute');
 		}
 	});
 	

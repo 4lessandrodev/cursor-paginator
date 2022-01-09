@@ -1,9 +1,9 @@
 {
 	"name": "ts-paginate",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "This package provide pagination to any data records that has id attribute",
 	"main": "dist/index.js",
-	"types": "dist/index.d.js",
+	"types": "dist/index.d.ts",
 	"license": "ISC",
 	"author": "Alessandro Dev",
 	"keywords": [
@@ -24,7 +24,8 @@
 		"test": "jest --runInBand",
 		"prebuild": "rimraf ./dist && yarn check:circular-deps",
 		"build": "tsc",
-		"check:circular-deps": "madge --circular --extensions ts ./lib"
+		"check:circular-deps": "madge --circular --extensions ts ./lib",
+		"run:example": "ts-node examples/simple-example.ts"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.4.0",
