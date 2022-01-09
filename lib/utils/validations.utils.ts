@@ -21,7 +21,7 @@ import {
 	IHasNextAndPrev,
 	IGetRangeParams,
 	IValidateProps
-} from "../types";
+} from "../types/types";
 import CustomError from "./error";
 
 export const defaultPerPageSize = 25;
@@ -215,9 +215,9 @@ export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => 
 		if (!ExistId(data)) {
 			throw new CustomError(
 				{
-					message: "Paginator: all records on data must have id attribute",
+					message: "paginate: all records on data must have id attribute",
 					stack: JSON.stringify(data),
-					name: 'Paginator'
+					name: 'paginate'
 				}
 			);
 		}
@@ -226,9 +226,9 @@ export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => 
 	if (hasAfterAndBeforeCursor) {
 		throw new CustomError(
 			{
-				message: "Paginator: use after or before as cursor param",
+				message: "paginate: use after or before as cursor param",
 				stack: JSON.stringify(props.params),
-				name: 'Paginator'
+				name: 'paginate'
 			}
 		);
 	}
@@ -238,9 +238,9 @@ export const ValidateProps: IValidateProps = <T>(props: IPaginatorParams<T>) => 
 	if (!isValidSize) {
 		throw new CustomError(
 			{
-				message: "Paginator: size param must be a positive number",
+				message: "paginate: size param must be a positive number",
 				stack: JSON.stringify(props.params),
-				name: 'Paginator'
+				name: 'paginate'
 			}
 		);
 	}
