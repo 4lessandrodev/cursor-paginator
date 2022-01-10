@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### 1.1.1 - 2022-01-10
+
+### Fixed
+
+- Pager - previous cursor when size is greater than available data. Now first register returns by default if no data exists.
+
+
+---
+
 ### 1.1.0 - 2022-01-10
 
 ### Changed

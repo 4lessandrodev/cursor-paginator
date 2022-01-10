@@ -29,25 +29,23 @@ describe('example', () => {
 		data.original = makeFakeUsers(40);
 	});
 
-	it('should return empty data if try to go back', () => {
-		expect.assertions(1);
-		try {
-			
-			const cursor = data.original[0].__cursor;
+	it('should return first item data if try to go back', () => {
 
-			pager.paginate({
-				data: data.original,
-				params: {
-					before: cursor
-				}
-			}).toRest<IUser>();
+		const cursor = data.original[0].__cursor;
 
-		} catch (error: any) {
-			expect(error.message).toBe('there is not data before cursor: 1')
-		}
+		const result = pager.paginate({
+			data: data.original,
+			params: {
+				before: cursor
+			}
+		}).toRest<IUser>();
 
-
-	});
+	expect(result.data).toHaveLength(1);
+	expect(result.data[0]).toEqual(data.original[0]);
+	expect(result.pageInfo.hasPreviousPage).toBeFalsy();
+	expect(result.pageInfo.hasNextPage).toBeTruthy();
+	
+});
 
 	it('should get first 15 items', () => {
 

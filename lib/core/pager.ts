@@ -158,8 +158,12 @@ export class Pager implements IPager {
 
 		if (existPrevPage) {
 
-			this.pageInfo.cursor = this.originalData[cursorIndex - size]?.[this.config.cursorKey] ?? this.originalData[0]?.[this.config.cursorKey];
-			this.payload = this.originalData.slice(cursorIndex - size, cursorIndex);
+			const isNegative = (cursorIndex - size) < 0;
+			const prevPosition = isNegative ? 0 : cursorIndex - size;
+
+			this.pageInfo.cursor = this.originalData[prevPosition]?.[this.config.cursorKey] ?? this.originalData[0]?.[this.config.cursorKey];
+			
+			this.payload = this.originalData.slice(prevPosition, cursorIndex);
 			return;
 
 		}
@@ -267,7 +271,7 @@ export class Pager implements IPager {
 	}
 
 	private existPrevPage(cursorIndex: number, size: number): boolean {
-		const existPrevPage = (cursorIndex - size) >= 0;
+		const existPrevPage = cursorIndex > 0 || (cursorIndex - size) >= 0;
 		return existPrevPage;
 	}
 	

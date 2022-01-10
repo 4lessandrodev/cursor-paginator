@@ -75,23 +75,23 @@ describe('paginate.ts', () => {
 
 	});
 
-	it('should return a empty data if provide the first cursor', () => {
-		
-		expect.assertions(1);
+	it('should return first item data if try to go back', () => {
 
-		try {
-			
-			paginate({
-				data: fakeData,
-				params: {
-					size: 10,
-					before: '1'
-				}
-			}).toRest<IFake>();
-		} catch (error: any) {
-			expect(error.message).toBe('there is not data before cursor: 1');
-		}
-	});
+		const cursor = fakeData[0].id;
+
+		const result = paginate({
+			data: fakeData,
+			params: {
+				before: cursor
+			}
+		}).toRest<IFake>();
+
+	expect(result.data).toHaveLength(1);
+	expect(result.data[0]).toEqual(fakeData[0]);
+	expect(result.pageInfo.hasPreviousPage).toBeFalsy();
+	expect(result.pageInfo.hasNextPage).toBeTruthy();
+	
+});
 
 
 	it('should paginate 3 items after position 1º', () => {
