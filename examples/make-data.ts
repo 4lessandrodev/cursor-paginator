@@ -1,4 +1,6 @@
 export interface IUser {
+	__cursor: string;
+	_id: string;
 	id: string;
 	name: string;
 	age: number;
@@ -18,8 +20,10 @@ export const makeFakeUsers = (quantity: number):IUser[] => {
 	}
 
 	// create users
-	for (let index = 0; index <= quantity; index++) {
+	for (let index = 1; index <= quantity + 1; index++) {
 		const user: IUser = {
+			__cursor: String(index),
+			_id: String(index),
 			id: String(index),
 			name: `some name ${index}`,
 			age: Math.trunc(Math.random() * 100),

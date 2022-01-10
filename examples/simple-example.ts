@@ -20,9 +20,9 @@ const simpleExample = (data: IUser[]): IPaginatorResult<IUser> => {
 }
 
 // simple example GQL approach
-const gqlExample = (pagination:  IPaginatorResult<IUser>): void => {
+const gqlExample = (pagination:  IPaginatorResult<IUser>) => {
 
-	console.log('Gql nodes pagination');
+	console.log('\nGql nodes pagination');
 	const nodes = dataToNode(pagination.data);
 
 	const gqlPagination = {
@@ -31,6 +31,7 @@ const gqlExample = (pagination:  IPaginatorResult<IUser>): void => {
 	}
 
 	console.log(gqlPagination);
+	return gqlPagination;
 
 }
 
@@ -39,7 +40,6 @@ const main = (): void => {
 	const data = makeFakeUsers(100);
 
 	const pages = simpleExample(data);
-	console.log('\n');
 	gqlExample(pages);
 
 }
