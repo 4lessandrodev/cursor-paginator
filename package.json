@@ -26,11 +26,13 @@
 		"prebuild": "rimraf ./dist && yarn check:circular-deps",
 		"build": "tsc",
 		"check:circular-deps": "madge --circular --extensions ts ./lib",
-		"run:example": "ts-node examples/simple-example.ts"
+		"run:example": "ts-node examples/simple-example.ts",
+		"bundle": "yarn browserify --debug --entry ./dist/index.js --outfile ./bundle/bundle.js"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.4.0",
 		"@types/node": "^17.0.7",
+		"browserify": "^17.0.0",
 		"jest": "^27.4.5",
 		"madge": "^5.0.1",
 		"rimraf": "^3.0.2",
