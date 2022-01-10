@@ -1,6 +1,6 @@
 {
 	"name": "ts-paginate",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"description": "This package provide pagination to any data records that has id attribute",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -24,10 +24,11 @@
 		"test": "jest --runInBand",
 		"prerun:example": "yarn build",
 		"prebuild": "rimraf ./dist && yarn check:circular-deps",
+		"postbuild": "yarn bundle",
 		"build": "tsc",
 		"check:circular-deps": "madge --circular --extensions ts ./lib",
 		"run:example": "ts-node examples/simple-example.ts",
-		"bundle": "yarn browserify --debug --entry ./dist/index.js --outfile ./bundle/bundle.js"
+		"bundle": "yarn browserify --entry ./dist/index.js --outfile ./bundle/index.min.js"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.4.0",
