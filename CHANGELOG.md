@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### 1.1.0 - 2022-01-10
+
+### Changed
+
+- Lib - change lib from function to class
+
+---
+
 ### 1.0.3 - 2022-01-09
 
 ### Fixed
