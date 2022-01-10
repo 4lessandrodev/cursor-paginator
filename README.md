@@ -6,9 +6,27 @@ This lib paginate any data as array of records using id attribute as cursor.
 
 Install `npm install ts-paginate` or `yarn add ts-paginate`
 
+You also may use from browser 
+
+`<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.1.4/bundle/bundle.min.js"></script>`
+
 ## Custom Configs
 
 default cursorKey: `id` and default pageSize: `25`
+
+Default configs
+
+```ts
+
+import { Pager } from 'ts-paginate';
+
+// custom config
+const paginate = new Pager({ cursorKey: '_id', pageSize: 15 }).paginate;
+
+
+```
+
+Or using a custom config
 
 ```ts
 
