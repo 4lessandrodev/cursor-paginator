@@ -90,7 +90,7 @@ export class Pager implements IPager {
 		};
 		this.payload = [];
 		this.originalData = props.data;
-		this.pageInfo.totalCount = props.data.length - 1;
+		this.pageInfo.totalCount = props.data.length;
 	}
 	
 	private handleErrors(): void {
@@ -178,7 +178,7 @@ export class Pager implements IPager {
 		const existNextPage = this.existNextPage(cursorIndex);
 
 		if (existNextPage) {
-			this.pageInfo.cursor = this.originalData[cursorIndex + size]?.[this.config.cursorKey] ?? this.originalData[this.pageInfo.totalCount]?.[this.config.cursorKey];
+			this.pageInfo.cursor = this.originalData[cursorIndex + size]?.[this.config.cursorKey] ?? this.originalData[this.pageInfo.totalCount - 1]?.[this.config.cursorKey];
 			this.payload = this.originalData.slice(cursorIndex, cursorIndex + size);
 
 			return;
@@ -266,7 +266,7 @@ export class Pager implements IPager {
 	}
 
 	private existNextPage(cursorIndex: number): boolean {
-		const existNextPage = cursorIndex < (this.pageInfo.totalCount) && cursorIndex >= 0;
+		const existNextPage = cursorIndex < (this.pageInfo.totalCount - 1) && cursorIndex >= 0;
 		return existNextPage;
 	}
 

@@ -27,7 +27,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: true,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '22'
 		})
 		expect(result.data).toHaveLength(7);
@@ -47,7 +47,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: true,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '37',
 		})
 		expect(result.data).toHaveLength(7);
@@ -106,7 +106,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: false,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '4',
 		})
 		expect(result.data).toHaveLength(3);
@@ -125,7 +125,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: false,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '4'
 		})
 		expect(result.data).toHaveLength(3);
@@ -145,7 +145,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: false,
 			hasPreviousPage: true,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '41'
 		});
 	});
@@ -165,7 +165,7 @@ describe('paginate.ts', () => {
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: true,
-			totalCount: 40,
+			totalCount: 41,
 			cursor: '33'
 		});
 	});

@@ -7,13 +7,18 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.1.2 - 2022-01-10
 
+### Fixed
+
+- Pager - total count. It was computing 1 item less
+
+---
 ### 1.1.1 - 2022-01-10
 
 ### Fixed
 
 - Pager - previous cursor when size is greater than available data. Now first register returns by default if no data exists.
-
 
 ---
 
@@ -24,7 +29,6 @@ All notable changes to this project will be documented in this file.
 - Lib - change lib from function to class
 
 ---
-
 ### 1.0.3 - 2022-01-09
 
 ### Fixed
