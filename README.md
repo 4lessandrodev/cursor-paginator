@@ -106,10 +106,10 @@ interface IUser {
 // set pager
 const paginate = new Pager().paginate;
 
-const result = paginate({ data: usersData }).toRest<IUser>();
+const result = paginate<IUser>({ data: usersData }).toRest();
 
 // or 
 
-const result = paginate({ data: usersData }).toGql<IUser>();
+const result = paginate<IUser>({ data: usersData }).toGql();
 
 ```
