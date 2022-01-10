@@ -76,9 +76,7 @@ const result = paginate({
 	}
 }).toGql();
 
-const nodes = dataToNode(result.data);
-
-console.log(nodes[0]);
+console.log(result.data[0]);
 `{
 	cursor: 'cursor_xyw',
 	node: {
