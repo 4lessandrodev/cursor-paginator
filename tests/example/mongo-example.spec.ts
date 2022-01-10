@@ -3,7 +3,10 @@ import makeFakeUsers, { IUser } from "../../examples/make-data"
 
 describe('example', () => {
 
-	const pager = new Pager();
+	const pager = new Pager({
+		cursorKey: '_id',
+		pageSize: 10
+	});
 
 	interface IResult {
 		original: IUser[];
@@ -30,7 +33,7 @@ describe('example', () => {
 		expect.assertions(1);
 		try {
 			
-			const cursor = data.original[0].id;
+			const cursor = data.original[0]._id;
 
 			pager.paginate({
 				data: data.original,
@@ -153,12 +156,12 @@ describe('example', () => {
 			data: data.original,
 			params: {
 				size: 10,
-				after: data.original[0].id
+				after: data.original[0]._id
 			}
 		}).toGql<IUser>();
 
 		expect(result.data[0].node).toEqual(data.original[0]);
-		expect(result.data[0].cursor).toEqual(data.original[0].id);
+		expect(result.data[0].cursor).toEqual(data.original[0]._id);
 		expect(result.data).toHaveLength(10);
 		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
 		expect(result.pageInfo.hasNextPage).toBeTruthy();
