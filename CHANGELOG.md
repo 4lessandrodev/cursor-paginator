@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.1.4 - 2022-01-11
+
+### Added
+
+- Added support to browser
+
+---
 ### 1.1.3 - 2022-01-11
 
 ### Changed
