@@ -1,34 +1,40 @@
-import { paginate, dataToNode } from '../dist';
-import { IPaginatorResult } from '../dist/types/types';
 import { IUser, makeFakeUsers } from './make-data';
+import { IGqlResult, IRestResult } from '../dist/types/types';
+import { Pager } from '../dist';
+
+// Create a paginate instance
+const paginate = new Pager().paginate;
 
 // simple example rest api approach
-const simpleExample = (data: IUser[]): IPaginatorResult<IUser> => {
+const simpleExample = (data: IUser[]): IRestResult<IUser> => {
 
-	const pagination = paginate({
+	const restPagination = paginate<IUser>({
 		data,
 		params: {
 			after: '51',
 			size: 10
 		}
-	});
+	}).toRest();
 
 	console.log('Simple pagination');
-	console.log(pagination);
+	console.log(restPagination);
 
-	return pagination;
+	return restPagination;
 }
 
 // simple example GQL approach
-const gqlExample = (pagination:  IPaginatorResult<IUser>) => {
+const gqlExample = (data: IUser[]): IGqlResult<IUser> => {
 
 	console.log('\nGql nodes pagination');
-	const nodes = dataToNode(pagination.data);
 
-	const gqlPagination = {
-		data: nodes,
-		pageInfo: pagination.pageInfo
-	}
+	const gqlPagination = paginate({
+		data,
+		params: {
+			after: '51',
+			size: 10
+		}
+	}).toGql()
+
 
 	console.log(gqlPagination);
 	return gqlPagination;
@@ -39,8 +45,8 @@ const gqlExample = (pagination:  IPaginatorResult<IUser>) => {
 const main = (): void => {
 	const data = makeFakeUsers(100);
 
-	const pages = simpleExample(data);
-	gqlExample(pages);
+	simpleExample(data);
+	gqlExample(data);
 
 }
 

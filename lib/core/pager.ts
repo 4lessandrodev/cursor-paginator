@@ -27,7 +27,7 @@ import { CustomError } from "../utils";
  * 
  * @example 
  * 
- * const pager = new Pager();
+ * const pager = new Pager().paginate;
  * 
  * const result = pager({
  *		data: Records,
@@ -98,7 +98,7 @@ export class Pager implements IPager {
 			if (!reg[this.config.cursorKey]) {
 				throw new CustomError(
 					{
-						message: "paginate: all records on data must have id attribute",
+						message: `paginate: all records on data must have ${this.config.cursorKey} attribute`,
 						stack: JSON.stringify(reg),
 						name: 'paginate'
 					}
@@ -246,7 +246,7 @@ export class Pager implements IPager {
 		this.updateNextAndPrev();
 
 		return {
-			data: this.payload as T[],
+			data: this.payload as Array<T>,
 			pageInfo: this.pageInfo
 		}
 
@@ -254,8 +254,8 @@ export class Pager implements IPager {
 
 	private toGql = <T>(): IGqlResult<T> => {
 		this.toRest();
-		const nodes = this.payload.map((node) => ({
-			node: node as T,
+		const nodes = this.payload.map((node: T) => ({
+			node: node,
 			cursor: node?.[this.config.cursorKey] as string
 		}));
 
@@ -285,8 +285,8 @@ export class Pager implements IPager {
 	 * @param props Object
 	 * @param props.data Array of Objects. Oject must have id attribute.
 	 * @param props.params Object
-	 * @param props.params.after String optional as item id value.
-	 * @param props.params.before String optional as item id value.
+	 * @param props.params.after String optional as item cursor value.
+	 * @param props.params.before String optional as item cursor value.
 	 * @param props.params.size Number optional.
 	 * 
 	 * @default props.params.size 25
@@ -307,8 +307,8 @@ export class Pager implements IPager {
 		this.setData(props);
 		this.handleErrors();
 		return {
-			toGql: <T>()=> this.toGql<T>(),
-			toRest: <T>()=> this.toRest<T>()
+			toGql: ()=> this.toGql<T>(),
+			toRest: ()=> this.toRest<T>()
 		}
 	};
 }

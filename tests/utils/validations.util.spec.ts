@@ -27,6 +27,17 @@ describe('validation.util', () => {
 
 		});
 
+		it('should to throw if any data record does not have id', () => {
+			
+			const customPaginate = new Pager({ cursorKey: '__cursor', pageSize: 5 }).paginate;
+			const params = { data: [{}], params: { after: 'param' } };
+
+			const toThrow = () => customPaginate(params).toRest();
+
+			expect(toThrow).toThrowError('paginate: all records on data must have __cursor attribute');
+
+		});
+
 		it('should to throw if provide a negative size', () => {
 			
 			const params = { data: [{ id: 'param' }, { id: 'param2' }], params: { after: 'param', size: -1 } };

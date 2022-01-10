@@ -38,7 +38,7 @@ describe('example', () => {
 			params: {
 				before: cursor
 			}
-		}).toRest<IUser>();
+		}).toRest();
 
 	expect(result.data).toHaveLength(1);
 	expect(result.data[0]).toEqual(data.original[0]);
@@ -53,7 +53,7 @@ describe('example', () => {
 		const result = pager.paginate({
 			data: data.original,
 			params: { size: 15 }
-		}).toRest<IUser>();
+		}).toRest();
 		
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
@@ -74,7 +74,7 @@ describe('example', () => {
 				size: 15,
 				after: nextCursor
 			}
-		}).toRest<IUser>();
+		}).toRest();
 		
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
@@ -95,7 +95,7 @@ describe('example', () => {
 				size: 15,
 				after: nextCursor
 			}
-		}).toRest<IUser>();
+		}).toRest();
 
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
@@ -118,7 +118,7 @@ describe('example', () => {
 					size: 15,
 					after: nextCursor
 				}
-			}).toRest<IUser>();
+			}).toRest();
 
 		} catch (error: any) {
 			expect(error.message).toBe('there is not data after cursor: 41')
@@ -137,7 +137,7 @@ describe('example', () => {
 				size: 15,
 				before: nextCursor
 			}
-		}).toRest<IUser>();
+		}).toRest();
 
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
@@ -156,7 +156,7 @@ describe('example', () => {
 				size: 10,
 				after: data.original[0]._id
 			}
-		}).toGql<IUser>();
+		}).toGql();
 
 		expect(result.data[0].node).toEqual(data.original[0]);
 		expect(result.data[0].cursor).toEqual(data.original[0]._id);
