@@ -22,6 +22,7 @@
 	},
 	"scripts": {
 		"test": "jest --runInBand",
+		"prerun:example": "yarn build",
 		"prebuild": "rimraf ./dist && yarn check:circular-deps",
 		"build": "tsc",
 		"check:circular-deps": "madge --circular --extensions ts ./lib",

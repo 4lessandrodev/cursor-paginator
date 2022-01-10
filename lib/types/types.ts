@@ -36,9 +36,11 @@ export interface IPageInfo {
 	cursor?: string;
 }
 
+export interface IPaginate<T> {
+	toGql: () => IGqlResult<T>;
+	toRest: () => IRestResult<T>;
+}
+
 export interface IPager {
-	paginate: <T>(data: IProps<T>) => {
-		toGql: <T>() => IGqlResult<T>;
-		toRest: <T>() => IRestResult<T>;
-	}
+	paginate: <T>(data: IProps<T>) => IPaginate<T>;
 }

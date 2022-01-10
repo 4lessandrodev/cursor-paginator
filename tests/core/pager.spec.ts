@@ -22,7 +22,7 @@ describe('paginate.ts', () => {
 				size: 7,
 				after: '15'
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
@@ -42,7 +42,7 @@ describe('paginate.ts', () => {
 				size: 7,
 				after: '30'
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
@@ -67,7 +67,7 @@ describe('paginate.ts', () => {
 					size: 10,
 					after: '41'
 				}
-			}).toRest<IFake>();
+			}).toRest();
 
 		} catch (error: any) {
 			expect(error.message).toBe('there is not data after cursor: 41');
@@ -84,7 +84,7 @@ describe('paginate.ts', () => {
 			params: {
 				before: cursor
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 	expect(result.data).toHaveLength(1);
 	expect(result.data[0]).toEqual(fakeData[0]);
@@ -101,7 +101,7 @@ describe('paginate.ts', () => {
 				size: 3,
 				after: '1'
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
@@ -120,7 +120,7 @@ describe('paginate.ts', () => {
 			params: {
 				size: 3
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
@@ -140,7 +140,7 @@ describe('paginate.ts', () => {
 				size: 7,
 				after: '35'
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: false,
@@ -158,7 +158,7 @@ describe('paginate.ts', () => {
 				size: 3,
 				before: '35'
 			}
-		}).toRest<IFake>();
+		}).toRest();
 
 		expect(result.data).toEqual([{ id: '33' }, { id: '34' }, { id: '35' }]);
 
@@ -174,7 +174,7 @@ describe('paginate.ts', () => {
 		expect.assertions(1);
 
 		try {
-			paginate({ data: fakeData, params: { after: 'valid', before: 'valid' } }).toRest<IFake>();
+			paginate({ data: fakeData, params: { after: 'valid', before: 'valid' } }).toRest();
 		} catch (error: any) {
 			expect(error.message).toBe('paginate: use after or before as cursor param');
 		}
@@ -184,7 +184,7 @@ describe('paginate.ts', () => {
 		expect.assertions(1);
 
 		try {
-			paginate({ data: fakeData, params: { size: -2 } }).toRest<IFake>();
+			paginate({ data: fakeData, params: { size: -2 } }).toRest();
 		} catch (error: any) {
 			expect(error.message).toBe('paginate: size param must be a positive number');
 		}
@@ -195,7 +195,7 @@ describe('paginate.ts', () => {
 		expect.assertions(1);
 		try {
 			
-			paginate({ data: fakeData, params: { size: 3, after: 'invalid_id' } }).toRest<IFake>();
+			paginate({ data: fakeData, params: { size: 3, after: 'invalid_id' } }).toRest();
 
 		} catch (error: any) {
 			expect(error.message).toBe('provided cursor: invalid_id does not exits on data')
@@ -208,7 +208,7 @@ describe('paginate.ts', () => {
 		expect.assertions(1);
 		try {
 			
-			paginate({ data: fakeData, params: { size: 3, before: 'invalid_id' } }).toRest<IFake>();
+			paginate({ data: fakeData, params: { size: 3, before: 'invalid_id' } }).toRest();
 
 		} catch (error: any) {
 			expect(error.message).toBe('provided cursor: invalid_id does not exits on data')
@@ -222,7 +222,7 @@ describe('paginate.ts', () => {
 		try {
 			
 			fakeData[5] = { name: 'some name' } as any;
-			paginate({ data: fakeData, params: { size: 3 } }).toRest<IFake>();
+			paginate({ data: fakeData, params: { size: 3 } }).toRest();
 
 		} catch (error: any) {
 			expect(error.message).toBe('paginate: all records on data must have id attribute');

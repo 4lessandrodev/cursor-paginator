@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.1.3 - 2022-01-11
+
+### Changed
+
+- Types - changed types for auto inference.
+- Error Message - changed attribute key from hard code to dynamic name.
+
+---
 ### 1.1.2 - 2022-01-10
 
 ### Fixed
