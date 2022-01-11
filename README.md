@@ -6,7 +6,7 @@ This lib paginate any data as array of records using id attribute as cursor.
 
 Install `npm install ts-paginate` or `yarn add ts-paginate`
 
-You also may use from browser 
+You also may use on browser 
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.1.6/bundle/index.min.js"></script>
