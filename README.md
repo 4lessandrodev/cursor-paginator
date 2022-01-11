@@ -23,7 +23,7 @@ Default configs
 import { Pager } from 'ts-paginate';
 
 // custom config
-const paginate = new Pager({ cursorKey: '_id', pageSize: 15 }).paginate;
+const paginate = new Pager().paginate;
 
 
 ```
