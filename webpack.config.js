@@ -6,7 +6,7 @@ module.exports = {
 	output: {
 		filename: 'index.min.js',
 		path: path.resolve(__dirname, 'bundle'),
-		library: 'Pager',
+		library: 'tsPaginate',
 		libraryTarget: 'umd',
 		globalObject: 'this',
 	},

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		p {
+			border: 1px solid rgb(22, 22, 87);
+			text-align: center;
+			padding: 4rem;
+			background-color: rgb(209, 250, 250);
+		}
+
+		button {
+			color: rgb(22, 22, 87);
+			padding: 1rem 4rem;
+		}
+
+		.btns {
+			display: flex;
+			justify-content: center;
+		}
+	</style>
+</head>
+<body>
+
+	
+	<div class="btns">
+		<button onclick="handlePrev()">Prev</button>
+		<button onclick="handleNext()">Next</button>
+	</div>
+	
+	<div id="root"></div>
+	<script src="../bundle/index.min.js"></script>
+	<script>
+
+		const root = document.getElementById('root');
+
+		let pageInfo = {
+			hasNextPage: true,
+			hasPreviousPage: false,
+			totalCount: 10,
+			cursor: 'cursor_1',
+		};
+
+		const data = [
+			{ id: 'cursor_1', name: 'user 1'},
+			{ id: 'cursor_2', name: 'user 2'},
+			{ id: 'cursor_3', name: 'user 3'},
+			{ id: 'cursor_4', name: 'user 4'},
+			{ id: 'cursor_5', name: 'user 5'},
+			{ id: 'cursor_6', name: 'user 6'},
+			{ id: 'cursor_7', name: 'user 7'},
+			{ id: 'cursor_8', name: 'user 8'},
+			{ id: 'cursor_9', name: 'user 9'},
+			{ id: 'cursor_10', name: 'user 10'},
+			{ id: 'cursor_11', name: 'user 11'},
+			{ id: 'cursor_12', name: 'user 12'},
+			{ id: 'cursor_13', name: 'user 13'},
+			{ id: 'cursor_14', name: 'user 14'},
+		];
+
+		const Pager = this.tsPaginate.Pager;
+
+		const paginate = new Pager().paginate;
+
+		const handleNext = () => {
+			console.log(pageInfo);
+			if (!pageInfo.hasNextPage) {
+				return;
+			}
+
+			const result = paginate({
+				data,
+				params: { size: 4, after: pageInfo.cursor }
+			}).toRest();
+
+			root.innerHTML = '';
+
+			pageInfo = result.pageInfo;
+
+			result.data.map((rel) => {
+				var element = `<p>${rel.id} - ${rel.name}</p>`;
+				root.innerHTML = root.innerHTML + element;
+			});
+
+		}
+
+		const handlePrev = () => {
+			console.log(pageInfo);
+			if (!pageInfo.hasPreviousPage) {
+				return;
+			}
+
+			const result = paginate({
+				data,
+				params: { size: 4, before: pageInfo.cursor }
+			}).toRest();
+
+			root.innerHTML = '';
+
+			pageInfo = result.pageInfo;
+
+			result.data.map((rel) => {
+				var element = `<p>${rel.id} - ${rel.name}</p>`;
+				root.innerHTML = root.innerHTML + element;
+			});
+
+		}
+
+		handleNext();
+
+	</script>
+</body>
+</html>
