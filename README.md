@@ -8,7 +8,9 @@ Install `npm install ts-paginate` or `yarn add ts-paginate`
 
 You also may use from browser 
 
-`<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.1.5/bundle/index.min.js"></script>`
+```html
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.1.6/bundle/index.min.js"></script>
+```
 
 ## Custom Configs
 

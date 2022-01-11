@@ -312,3 +312,5 @@ export class Pager implements IPager {
 		}
 	};
 }
+
+export default Pager;
