@@ -24,6 +24,9 @@ You also may use on browser
 
 ```
 
+Follow link for browser example:
+[Click Here](https://4lessandrodev.github.io/ts-paginate/examples/browser.html)
+
 ## Custom Configs
 
 Default configs
