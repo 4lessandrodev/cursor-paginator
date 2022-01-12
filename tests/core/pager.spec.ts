@@ -28,8 +28,10 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			cursor: '22'
-		})
+			firstCursor: '15',
+			lastCursor: '21'
+		});
+
 		expect(result.data).toHaveLength(7);
 		expect(result.data[0].id).toBe('15');
 		expect(result.data[6].id).toBe('21');
@@ -48,8 +50,10 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			cursor: '37',
+			firstCursor: '30',
+			lastCursor: '36'
 		})
+
 		expect(result.data).toHaveLength(7);
 		expect(result.data[0].id).toBe('30');
 		expect(result.data[6].id).toBe('36');
@@ -107,7 +111,8 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: false,
 			totalCount: 41,
-			cursor: '4',
+			firstCursor: '1',
+			lastCursor: '3'
 		})
 		expect(result.data).toHaveLength(3);
 		expect(result.data[0].id).toBe('1');
@@ -126,7 +131,8 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: false,
 			totalCount: 41,
-			cursor: '4'
+			firstCursor: '1',
+			lastCursor: '3'
 		})
 		expect(result.data).toHaveLength(3);
 		expect(result.data[0].id).toBe('1');
@@ -141,12 +147,13 @@ describe('paginate.ts', () => {
 				after: '35'
 			}
 		}).toRest();
-
+		
 		expect(result.pageInfo).toEqual({
 			hasNextPage: false,
 			hasPreviousPage: true,
 			totalCount: 41,
-			cursor: '41'
+			firstCursor: '35',
+			lastCursor: '41'
 		});
 	});
 
@@ -160,13 +167,14 @@ describe('paginate.ts', () => {
 			}
 		}).toRest();
 
-		expect(result.data).toEqual([{ id: '33' }, { id: '34' }, { id: '35' }]);
+		expect(result.data).toEqual([{ id: '33' }, { id: '34' }, { id: '35' }]);	
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			cursor: '33'
+			firstCursor: '33',
+			lastCursor: '35'
 		});
 	});
 

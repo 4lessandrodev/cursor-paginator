@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.2.0 - 2022-01-11
+
+### Changed
+
+- PageInfo - payload, changed from cursor key to fistCursor and lastCursor.
+To go next page use lastCursor, and to go back previous page use firstCursor as reference.
+
+---
 ### 1.1.4 - 1.1.7 - 2022-01-11
 
 ### Added

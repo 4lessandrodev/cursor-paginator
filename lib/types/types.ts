@@ -33,7 +33,8 @@ export interface IPageInfo {
 	totalCount: number;
 	hasNextPage: boolean;
 	hasPreviousPage: boolean;
-	cursor?: string;
+	firstCursor?: string,
+	lastCursor?: string
 }
 
 export interface IPaginate<T> {
