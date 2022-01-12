@@ -28,16 +28,22 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			firstCursor: '15',
-			lastCursor: '21'
+			sizePerPage: 7,
+			currentItem: 16,
+			page: {
+				current: 3,
+				of: 6
+			},
+			firstCursor: '16',
+			lastCursor: '22'
 		});
 
 		expect(result.data).toHaveLength(7);
-		expect(result.data[0].id).toBe('15');
-		expect(result.data[6].id).toBe('21');
+		expect(result.data[0].id).toBe('16');
+		expect(result.data[6].id).toBe('22');
 	});
 
-	it('should paginate 7 items before position 30º', () => {
+	it('should paginate 7 items after position 30º', () => {
 		const result = paginate({
 			data: fakeData,
 			params: {
@@ -50,13 +56,19 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			firstCursor: '30',
-			lastCursor: '36'
+			sizePerPage: 7,
+			currentItem: 31,
+			page: {
+				current: 5,
+				of: 6
+			},
+			firstCursor: '31',
+			lastCursor: '37'
 		})
 
 		expect(result.data).toHaveLength(7);
-		expect(result.data[0].id).toBe('30');
-		expect(result.data[6].id).toBe('36');
+		expect(result.data[0].id).toBe('31');
+		expect(result.data[6].id).toBe('37');
 	});
 
 	it('should throw if try get data after last cursor', () => {
@@ -83,17 +95,16 @@ describe('paginate.ts', () => {
 
 		const cursor = fakeData[0].id;
 
-		const result = paginate({
-			data: fakeData,
-			params: {
-				before: cursor
-			}
-		}).toRest();
-
-	expect(result.data).toHaveLength(1);
-	expect(result.data[0]).toEqual(fakeData[0]);
-	expect(result.pageInfo.hasPreviousPage).toBeFalsy();
-	expect(result.pageInfo.hasNextPage).toBeTruthy();
+		try {
+			paginate({
+				   data: fakeData,
+				   params: {
+					   before: cursor
+				   }
+			}).toRest();
+		} catch (error: any) {
+			expect(error.message).toBe('there is not data before cursor: 1')
+		}
 	
 });
 
@@ -109,14 +120,20 @@ describe('paginate.ts', () => {
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
-			hasPreviousPage: false,
+			hasPreviousPage: true,
 			totalCount: 41,
-			firstCursor: '1',
-			lastCursor: '3'
+			sizePerPage: 3,
+			currentItem: 2,
+			page: {
+				current: 2,
+				of: 14
+			},
+			firstCursor: '2',
+			lastCursor: '4'
 		})
 		expect(result.data).toHaveLength(3);
-		expect(result.data[0].id).toBe('1');
-		expect(result.data[2].id).toBe('3');
+		expect(result.data[0].id).toBe('2');
+		expect(result.data[2].id).toBe('4');
 	});
 
 	it('should paginate 3 items 1-3', () => {
@@ -131,6 +148,12 @@ describe('paginate.ts', () => {
 			hasNextPage: true,
 			hasPreviousPage: false,
 			totalCount: 41,
+			sizePerPage: 3,
+			currentItem: 1,
+			page: {
+				current: 1,
+				of: 14
+			},
 			firstCursor: '1',
 			lastCursor: '3'
 		})
@@ -147,12 +170,18 @@ describe('paginate.ts', () => {
 				after: '35'
 			}
 		}).toRest();
-		
+
 		expect(result.pageInfo).toEqual({
 			hasNextPage: false,
 			hasPreviousPage: true,
 			totalCount: 41,
-			firstCursor: '35',
+			sizePerPage: 7,
+			currentItem: 36,
+			page: {
+				current: 6,
+				of: 6
+			},
+			firstCursor: '36',
 			lastCursor: '41'
 		});
 	});
@@ -167,16 +196,43 @@ describe('paginate.ts', () => {
 			}
 		}).toRest();
 
-		expect(result.data).toEqual([{ id: '33' }, { id: '34' }, { id: '35' }]);	
+		expect(result.data).toEqual([{ id: '32' }, { id: '33' }, { id: '34' }]);	
 
 		expect(result.pageInfo).toEqual({
 			hasNextPage: true,
 			hasPreviousPage: true,
 			totalCount: 41,
-			firstCursor: '33',
-			lastCursor: '35'
+			sizePerPage: 3,
+			currentItem: 32,
+			page: {
+				current: 11,
+				of: 14
+			},
+			firstCursor: '32',
+			lastCursor: '34'
 		});
 	});
+
+	it('should throw if try to get data before first cursor', () => {
+
+		
+		const data = [{ id: '1' }];
+		expect.assertions(1);
+		try {
+			paginate({
+				data,
+				params: {
+					size: 3,
+					before: '1'
+				}
+			}).toRest();
+		} catch (error: any) {
+			expect(error.message).toBe('there is not data before cursor: 1')
+		}
+
+
+	});
+
 
 	it('should throws if provide before and after', () => {
 		expect.assertions(1);

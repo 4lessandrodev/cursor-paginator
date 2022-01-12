@@ -19,6 +19,12 @@ describe('example', () => {
 			hasNextPage: false,
 			hasPreviousPage: false,
 			totalCount: 0,
+			currentItem: 0,
+			sizePerPage: 0,
+			page: {
+				current: 0,
+				of: 0,
+			},
 			firstCursor: undefined,
 			lastCursor: undefined
 		}
@@ -28,21 +34,25 @@ describe('example', () => {
 		data.original = makeFakeUsers(40);
 	});
 
-	it('should return first item data if try to go back', () => {
+	it('should throw error if try back and no exist previous page', () => {
 
 			const cursor = data.original[0].id;
 
-			const result = pager.paginate({
+		expect.assertions(1);
+
+		try {
+
+			pager.paginate({
 				data: data.original,
 				params: {
 					before: cursor
 				}
 			}).toRest();
+			
+		} catch (error: any) {
+			expect(error.message).toBe('there is not data before cursor: 1')
+		}
 
-		expect(result.data).toHaveLength(1);
-		expect(result.data[0]).toEqual(data.original[0]);
-		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
-		expect(result.pageInfo.hasNextPage).toBeTruthy();
 		
 	});
 
@@ -52,7 +62,7 @@ describe('example', () => {
 			data: data.original,
 			params: {
 				size: 20,
-				before: data.original[9].id
+				before: data.original[10].id
 			}
 		}).toGql();
 
@@ -118,7 +128,7 @@ describe('example', () => {
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
 
-		expect(result.data).toHaveLength(13);
+		expect(result.data).toHaveLength(11);
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeFalsy();
 
@@ -162,7 +172,7 @@ describe('example', () => {
 
 		expect(result.data).toHaveLength(15);
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
-		expect(result.pageInfo.hasNextPage).toBeFalsy();
+		expect(result.pageInfo.hasNextPage).toBeTruthy();
 
 	});
 
@@ -176,10 +186,10 @@ describe('example', () => {
 			}
 		}).toGql();
 
-		expect(result.data[0].node).toEqual(data.original[0]);
-		expect(result.data[0].cursor).toEqual(data.original[0].id);
+		expect(result.data[0].node).toEqual(data.original[1]);
+		expect(result.data[0].cursor).toEqual(data.original[1].id);
 		expect(result.data).toHaveLength(10);
-		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
+		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeTruthy();
 
 	});
@@ -190,7 +200,7 @@ describe('example', () => {
 			data: data.original,
 			params: {
 				size: 20,
-				after: data.original[31].id
+				after: data.original[30].id
 			}
 		}).toGql();
 

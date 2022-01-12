@@ -7,6 +7,25 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.2.1 - 2022-01-12
+
+### Changed
+
+- PageInfo - added more details on page info payload.
+
+```ts
+{
+	...
+	sizePerPage: 7,
+	currentItem: 1,
+	page: {
+		current: 2,
+		of: 6
+	}
+}
+```
+
+---
 ### 1.2.0 - 2022-01-11
 
 ### Changed

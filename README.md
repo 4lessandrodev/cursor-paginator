@@ -20,7 +20,7 @@ You also may use on browser
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.0/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.1/bundle/index.min.js"></script>
 
 ```
 
@@ -73,7 +73,7 @@ const result = paginate({
 	data: dbData,
 	params: {
 		size: 7,
-		after: 'cursor_xyz'
+		after: 'cursor_xya'
 	}
 }).toRest();
 
@@ -82,8 +82,14 @@ console.log(result.pageInfo);
 	hasNextPage: true,
 	hasPreviousPage: true,
 	totalCount: 40,
-	firstCursor: 'cursor_xyz',
-	lastCursor: 'cursor_xyw'
+	sizePerPage: 7,
+	currentItem: 1,
+	page: {
+		current: 2,
+		of: 6
+	},
+	firstCursor: 'cursor_xyb',
+	lastCursor: 'cursor_xyh'
 }`
 
 // using before cursor

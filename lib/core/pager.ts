@@ -49,12 +49,14 @@ import { CustomError } from "../utils";
  * {
  *		data,
  *		pageInfo: {
-*			totalCount,
+ *			totalCount,
  *			hasNextPage,
  *			hasPreviousPage,
- *			cursor,
- 			firstCursor,
-			lastCursor,
+ *			sizePerPage,
+ *			currentItem,
+ *			page: { current, of },
+ *			firstCursor,
+ *			lastCursor,
  *		}
  *	}
  * 
@@ -75,6 +77,12 @@ export class Pager implements IPager {
 		hasNextPage: false,
 		hasPreviousPage: false,
 		totalCount: 0,
+		sizePerPage: 0,
+		currentItem: 0,
+		page: {
+			current: 0,
+			of: 0
+		},
 		firstCursor: undefined,
 		lastCursor: undefined
 	};
@@ -155,7 +163,7 @@ export class Pager implements IPager {
 
 	private backwardFlow() {
 
-		const cursorIndex = this.getCursorIndex() + 1;
+		const cursorIndex = this.getCursorIndex();
 		const size = this.pagination.size ?? this.config.pageSize;
 
 		const existPrevPage = this.existPrevPage(cursorIndex, size);
@@ -187,7 +195,7 @@ export class Pager implements IPager {
 			this.cursor = this.originalData[cursorIndex + size]?.[this.config.cursorKey] ??
 				this.originalData[this.pageInfo.totalCount - 1]?.[this.config.cursorKey];
 			
-			this.payload = this.originalData.slice(cursorIndex, cursorIndex + size);
+			this.payload = this.originalData.slice(cursorIndex + 1, cursorIndex + size + 1);
 
 			return;
 		}
@@ -229,6 +237,30 @@ export class Pager implements IPager {
 
 		this.pageInfo.hasNextPage = this.originalData[lastIndex + 1]?.[key] !== undefined;
 		this.pageInfo.hasPreviousPage = this.originalData[firstIndex - 1]?.[key] !== undefined;
+
+	}
+
+	private updatePageDetails() {
+		
+		const key = this.config.cursorKey;
+		const firstIndex = this.originalData.findIndex((el) => el?.[key] === this.payload[0]?.[key]);
+
+		this.pageInfo.sizePerPage = this.pagination.size ?? this.config.pageSize;
+		this.pageInfo.currentItem = firstIndex + 1;
+
+		const currentPage = this.pageInfo.currentItem / this.pageInfo.sizePerPage;
+		const lastPage = this.pageInfo.totalCount / this.pageInfo.sizePerPage;
+
+		this.pageInfo.page.current = Math.ceil(currentPage);
+		this.pageInfo.page.of = Math.ceil(lastPage);
+
+		if (!this.pageInfo.hasNextPage) {
+			this.pageInfo.page.current = this.pageInfo.page.of;
+		}	
+
+		if (this.pageInfo.hasPreviousPage && this.pageInfo.page.current === 1) {
+			this.pageInfo.page.current = this.pageInfo.page.current + 1;
+		}
 	}
 
 	private toRest = <T>(): IRestResult<T> => {
@@ -239,11 +271,9 @@ export class Pager implements IPager {
 			return {
 				data: [],
 				pageInfo: {
-					hasNextPage: false,
-					hasPreviousPage: false,
+					...this.pageInfo,
 					lastCursor: isBefore ?? isAfter,
 					firstCursor: isBefore ?? isAfter,
-					totalCount: 0
 				}
 			}
 		}
@@ -259,6 +289,7 @@ export class Pager implements IPager {
 		}
 
 		this.updateNextAndPrev();
+		this.updatePageDetails();
 
 		return {
 			data: this.payload as Array<T>,
