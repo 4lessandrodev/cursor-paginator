@@ -53,6 +53,8 @@ import { CustomError } from "../utils";
  *			hasNextPage,
  *			hasPreviousPage,
  *			cursor,
+ 			firstCursor,
+			lastCursor,
  *		}
  *	}
  * 
@@ -61,6 +63,7 @@ export class Pager implements IPager {
 	private readonly config: IPaginateConfig;
 	private payload: any[] = [];
 	private originalData: any[] = [];
+	private cursor?: string = undefined;
 
 	private pagination: IPagination = {
 		after: undefined,
@@ -72,7 +75,8 @@ export class Pager implements IPager {
 		hasNextPage: false,
 		hasPreviousPage: false,
 		totalCount: 0,
-		cursor: undefined
+		firstCursor: undefined,
+		lastCursor: undefined
 	};
 
 	constructor(config?: IPaginateConfig) {
@@ -86,7 +90,7 @@ export class Pager implements IPager {
 		this.pagination = {
 			after: props?.params?.after,
 			before: props?.params?.before,
-			size: props?.params?.size
+			size: props?.params?.size ?? this.config.pageSize
 		};
 		this.payload = [];
 		this.originalData = props.data;
@@ -161,7 +165,8 @@ export class Pager implements IPager {
 			const isNegative = (cursorIndex - size) < 0;
 			const prevPosition = isNegative ? 0 : cursorIndex - size;
 
-			this.pageInfo.cursor = this.originalData[prevPosition]?.[this.config.cursorKey] ?? this.originalData[0]?.[this.config.cursorKey];
+			this.cursor = this.originalData[prevPosition]?.[this.config.cursorKey] ??
+				this.originalData[0]?.[this.config.cursorKey];
 			
 			this.payload = this.originalData.slice(prevPosition, cursorIndex);
 			return;
@@ -178,7 +183,10 @@ export class Pager implements IPager {
 		const existNextPage = this.existNextPage(cursorIndex);
 
 		if (existNextPage) {
-			this.pageInfo.cursor = this.originalData[cursorIndex + size]?.[this.config.cursorKey] ?? this.originalData[this.pageInfo.totalCount - 1]?.[this.config.cursorKey];
+			
+			this.cursor = this.originalData[cursorIndex + size]?.[this.config.cursorKey] ??
+				this.originalData[this.pageInfo.totalCount - 1]?.[this.config.cursorKey];
+			
 			this.payload = this.originalData.slice(cursorIndex, cursorIndex + size);
 
 			return;
@@ -190,7 +198,7 @@ export class Pager implements IPager {
 	private defaultFlow() {
 		const size = this.pagination.size ?? this.config.pageSize;
 		this.payload = this.originalData.slice(0, size);
-		this.pageInfo.cursor = this.originalData[size]?.[this.config.cursorKey];
+		this.cursor = this.originalData[size]?.[this.config.cursorKey];
 	}
 
 	private updateNextAndPrev(): void {
@@ -213,6 +221,12 @@ export class Pager implements IPager {
 		const firstIndex = this.originalData.findIndex((el) => el?.[key] === this.payload[0]?.[key]);
 		const lastIndex = this.originalData.findIndex((el) => el?.[key] === this.payload[payloadLength]?.[key]);
 
+
+		const backPosition = this.pagination.size ?? (this.pageInfo.totalCount - 1) - (this.payload.length);
+
+		this.pageInfo.firstCursor = this.payload?.[0]?.[key] ?? this.cursor;
+		this.pageInfo.lastCursor = this.payload?.[backPosition - 1]?.[key] ?? this.cursor;
+
 		this.pageInfo.hasNextPage = this.originalData[lastIndex + 1]?.[key] !== undefined;
 		this.pageInfo.hasPreviousPage = this.originalData[firstIndex - 1]?.[key] !== undefined;
 	}
@@ -227,7 +241,8 @@ export class Pager implements IPager {
 				pageInfo: {
 					hasNextPage: false,
 					hasPreviousPage: false,
-					cursor: isBefore ?? isAfter,
+					lastCursor: isBefore ?? isAfter,
+					firstCursor: isBefore ?? isAfter,
 					totalCount: 0
 				}
 			}

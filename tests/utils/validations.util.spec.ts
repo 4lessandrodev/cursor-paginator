@@ -57,7 +57,11 @@ describe('validation.util', () => {
 			const result = pager({ data: [] }).toRest();
 
 			expect(result.pageInfo).toEqual({
-				cursor: undefined, hasNextPage: false, hasPreviousPage: false, totalCount: 0
+				firstCursor: undefined,
+				lastCursor: undefined,
+				hasNextPage: false,
+				hasPreviousPage: false,
+				totalCount: 0
 			});
 
 		});
@@ -70,7 +74,11 @@ describe('validation.util', () => {
 			const result = pager({ data: originalData, params: { after: '2', size: 2 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
-				cursor: '4', hasNextPage: true, hasPreviousPage: true, totalCount: 5
+				firstCursor: '2',
+				lastCursor: '3',
+				hasNextPage: true,
+				hasPreviousPage: true,
+				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
 
@@ -84,7 +92,11 @@ describe('validation.util', () => {
 			const result = pager({ data: originalData, params: { size: 3 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
-				cursor: '4', hasNextPage: true, hasPreviousPage: false, totalCount: 5
+				lastCursor: '3',
+				firstCursor: '1',
+				hasNextPage: true,
+				hasPreviousPage: false,
+				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
 
@@ -98,7 +110,11 @@ describe('validation.util', () => {
 			const result = pager({ data: originalData, params: { after: '3', size: 3 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
-				cursor: '5', hasNextPage: false, hasPreviousPage: true, totalCount: 5
+				lastCursor: '5',
+				firstCursor: '3',
+				hasNextPage: false,
+				hasPreviousPage: true,
+				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
 

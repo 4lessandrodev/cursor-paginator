@@ -20,7 +20,7 @@ You also may use on browser
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.1.7/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.0/bundle/index.min.js"></script>
 
 ```
 
@@ -79,7 +79,8 @@ console.log(result.pageInfo);
 	hasNextPage: true,
 	hasPreviousPage: true,
 	totalCount: 40,
-	cursor: 'cursor_xyz'
+	firstCursor: 'cursor_xyz',
+	lastCursor: 'cursor_xyw'
 }`
 
 // using before cursor

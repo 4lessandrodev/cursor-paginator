@@ -6,11 +6,39 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<style>
+		body{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-family: sans-serif;
+			margin: 2% 20%;
+			background-color: #ededed;
+		}
 		p {
-			border: 1px solid rgb(22, 22, 87);
+			display: flex;
+			align-items: center;
 			text-align: center;
-			padding: 4rem;
-			background-color: rgb(209, 250, 250);
+			padding: 1rem;
+			border-radius: 15px;
+			justify-content: space-between;
+			background-color: white;
+			max-height: 180px;
+			min-width: 500px;
+		}
+
+		p:hover {
+			cursor: pointer;
+			box-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.445);
+			background-color: black;
+			color: white;
+		}
+
+		img {
+			max-width: 200px;
+			min-height: 180px;
+			max-height: 180px;
+			border-radius: 50%;
 		}
 
 		button {
@@ -22,14 +50,18 @@
 			display: flex;
 			justify-content: center;
 		}
+		input[type='number'] {
+			text-align: center;
+		}
 	</style>
 </head>
 <body>
 
 	
 	<div class="btns">
-		<button onclick="handlePrev()">Prev</button>
-		<button onclick="handleNext()">Next</button>
+		<button onclick="handlePrev()" title="Goes to previous page on click">Prev</button>
+		<button onclick="handleNext()" title="Goes to next page on click">Next</button>
+		<input type="number" name="size" id="size" value="4" max="21" min="1"  title="Size per page">
 	</div>
 	
 	<div id="root"></div>
@@ -37,79 +69,196 @@
 	<script>
 
 		const root = document.getElementById('root');
+		const size = document.getElementById('size');
 
+		// global state to pagination
 		let pageInfo = {
 			hasNextPage: true,
 			hasPreviousPage: false,
 			totalCount: 10,
-			cursor: 'cursor_1',
+			firstCursor: 'cursor_1',
+			lastCursor: 'cursor_4',
 		};
 
+		// data simulation to paginate
 		const data = [
-			{ id: 'cursor_1', name: 'user 1'},
-			{ id: 'cursor_2', name: 'user 2'},
-			{ id: 'cursor_3', name: 'user 3'},
-			{ id: 'cursor_4', name: 'user 4'},
-			{ id: 'cursor_5', name: 'user 5'},
-			{ id: 'cursor_6', name: 'user 6'},
-			{ id: 'cursor_7', name: 'user 7'},
-			{ id: 'cursor_8', name: 'user 8'},
-			{ id: 'cursor_9', name: 'user 9'},
-			{ id: 'cursor_10', name: 'user 10'},
-			{ id: 'cursor_11', name: 'user 11'},
-			{ id: 'cursor_12', name: 'user 12'},
-			{ id: 'cursor_13', name: 'user 13'},
-			{ id: 'cursor_14', name: 'user 14'},
+			{ 
+				id: 'cursor_1', 
+				name: 'Naruto Uzumaki',
+				image: 'https://c.tenor.com/bfnPEuMuOFIAAAAC/naruto-yay.gif'
+			},
+			{ 
+				id: 'cursor_2', 
+				name: 'Sasuki Uchiha', 
+				image: 'https://upload.wikimedia.org/wikipedia/pt/0/02/Sasukereup.jpg' 
+			},
+			{ 
+				id: 'cursor_3', 
+				name: 'Kakashi Hatake', 
+				image: 'https://i.pinimg.com/originals/e4/55/7b/e4557b8795deb926e040447d92f3d757.jpg' 
+			},
+			{ 
+				id: 'cursor_4', 
+				name: 'Itachi Uchiha', 
+				image: 'https://upload.wikimedia.org/wikipedia/pt/thumb/e/e5/Itachi_Uchiha.jpg/200px-Itachi_Uchiha.jpg' 
+			},
+			{ 
+				id: 'cursor_5', 
+				name: 'Madara Uchiha', 
+				image: 'https://pa1.narvii.com/6335/ecd93c0e2d5fdb35de767c1fd13662c404874017_hq.gif' 
+			},
+			{ 
+				id: 'cursor_6', 
+				name: 'Sakura Haruno', 
+				image: 'https://c.tenor.com/m3MMfZbG5j4AAAAd/naruto-sakura-haruno.gif' 
+			},
+			{ 
+				id: 'cursor_7', 
+				name: 'Minato Namikaze', 
+				image: 'https://i.pinimg.com/736x/97/bb/60/97bb6031ea72f304ad9f1efae3eacc91.jpg'
+			},
+			{ 
+				id: 'cursor_8', 
+				name: 'Hinata Hyuga', 
+				image: 'https://i.pinimg.com/originals/d5/23/50/d523507e1128883b9ca4f8e878a7a119.gif' 
+			},
+			{ 
+				id: 'cursor_9', 
+				name: 'Gaara', 
+				image: 'http://pa1.narvii.com/6333/558e302f9015aab48a0ec9b11827d7cbbbd0d94b_00.gif' 
+			},
+			{ 
+				id: 'cursor_10', 
+				name: 'Tsunade Senju', 
+				image: 'https://c.tenor.com/qV7EwBM81zYAAAAC/tsunade-fifth-hokage.gif' 
+			},
+			{ 
+				id: 'cursor_11', 
+				name: 'Jiraya', 
+				image: 'https://c.tenor.com/xvXXaO-nbE4AAAAC/jiraiya-anime.gif' 
+			},
+			{ 
+				id: 'cursor_12', 
+				name: 'Ino Yamanaka', 
+				image: 'https://c.tenor.com/9478CMDNfq0AAAAM/ino-naruto.gif' 
+			},
+			{ 
+				id: 'cursor_13', 
+				name: 'Shikamaru Nara', 
+				image: 'https://c.tenor.com/pugZYvJW2C0AAAAM/shikamaru.gif' 
+			},
+			{ 
+				id: 'cursor_14', 
+				name: 'Deidara', 
+				image: 'https://pa1.narvii.com/6888/cf3abb4c4c3e2651852b85d9bcce8e7c7bcf58f6r1-400-270_hq.gif' 
+			},
+			{ 
+				id: 'cursor_15', 
+				name: 'Sasori', 
+				image: 'https://i.pinimg.com/originals/db/c6/2d/dbc62d85aa7a6e9450b3aa3840498a89.gif' 
+			},
+			{ 
+				id: 'cursor_16', 
+				name: 'Neji Hyuga', 
+				image: 'https://c.tenor.com/9oLzC5xKkyoAAAAM/naruto-byakugan.gif' 
+			},
+			{ 
+				id: 'cursor_17', 
+				name: 'Temari', 
+				image: 'https://c.tenor.com/Gs6DdN2a6N0AAAAC/temari-naruto.gif' 
+			},
+			{ 
+				id: 'cursor_18', 
+				name: 'Yamato', 
+				image: 'https://thumbs.gfycat.com/AlienatedUnacceptableAngelfish-size_restricted.gif' 
+			},
+			{ 
+				id: 'cursor_19', 
+				name: 'Asuma Sarutobi', 
+				image: 'https://thumbs.gfycat.com/AdmiredClosedInsect-size_restricted.gif' 
+			},
+			{ 
+				id: 'cursor_20', 
+				name: 'Sai', 
+				image: 'https://c.tenor.com/iRVQxndqnLUAAAAC/kenjutsu-cool.gif' 
+			},
+			{ 
+				id: 'cursor_21', 
+				name: 'Rock Lee', 
+				image: 'https://c.tenor.com/ghBwuN542TcAAAAC/rock-lee-vs-gaara-fight.gif' 
+			},
 		];
 
+		// get lib from index.min.js
 		const Pager = this.tsPaginate.Pager;
 
 		const paginate = new Pager().paginate;
 
+		// Paginate to next page
 		const handleNext = () => {
+
 			console.log(pageInfo);
+
+			// ensure It has next page
 			if (!pageInfo.hasNextPage) {
 				return;
 			}
 
+			// get pagination
 			const result = paginate({
 				data,
-				params: { size: 4, after: pageInfo.cursor }
+				params: { 
+					size: parseInt(size.value), 
+					after: pageInfo.lastCursor 
+				}
 			}).toRest();
 
 			root.innerHTML = '';
 
+			// update state
 			pageInfo = result.pageInfo;
 
+			// handle result
 			result.data.map((rel) => {
-				var element = `<p>${rel.id} - ${rel.name}</p>`;
+				var element = `<p><img src="${rel.image}"><b>${rel.id}</b> ${rel.name}</p>`;
 				root.innerHTML = root.innerHTML + element;
 			});
 
 		}
 
+		// paginate to backward
 		const handlePrev = () => {
+
 			console.log(pageInfo);
+
+			// ensure It has a previous page
 			if (!pageInfo.hasPreviousPage) {
 				return;
 			}
 
+			// paginate data
 			const result = paginate({
 				data,
-				params: { size: 4, before: pageInfo.cursor }
+				params: { 
+					size: parseInt(size.value), 
+					before: pageInfo.firstCursor 
+				}
 			}).toRest();
 
 			root.innerHTML = '';
 
+			// update global state
 			pageInfo = result.pageInfo;
 
+			// handle result
 			result.data.map((rel) => {
-				var element = `<p>${rel.id} - ${rel.name}</p>`;
+				var element = `<p><img src="${rel.image}"><b>${rel.id}</b> ${rel.name}</p>`;
 				root.innerHTML = root.innerHTML + element;
 			});
 
 		}
 
+		// start handle next page
 		handleNext();
 
 	</script>

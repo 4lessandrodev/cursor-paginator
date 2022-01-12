@@ -1,5 +1,6 @@
 import { Pager } from '../../lib'
 import makeFakeUsers, { IUser } from "../../examples/make-data"
+import { IPageInfo } from '../../lib/types/types';
 
 describe('example', () => {
 
@@ -11,7 +12,7 @@ describe('example', () => {
 	interface IResult {
 		original: IUser[];
 		payload: IUser[];
-		pageInfo: any;
+		pageInfo: IPageInfo;
 	}
 	
 	const data: IResult = {
@@ -21,7 +22,8 @@ describe('example', () => {
 			hasNextPage: false,
 			hasPreviousPage: false,
 			totalCount: 0,
-			cursor: undefined
+			firstCursor: undefined,
+			lastCursor: undefined
 		}
 	}
 
@@ -66,7 +68,7 @@ describe('example', () => {
 
 	it('should get next 15 items', () => {
 
-		const nextCursor = data.pageInfo.cursor;
+		const nextCursor = data.pageInfo.lastCursor;
 
 		const result = pager.paginate({
 			data: data.original,
@@ -85,9 +87,9 @@ describe('example', () => {
 
 	});
 
-	it('should get last 11 items', () => {
+	it('should get last 13 items', () => {
 
-		const nextCursor = data.pageInfo.cursor;
+		const nextCursor = data.pageInfo.lastCursor;
 
 		const result = pager.paginate({
 			data: data.original,
@@ -100,7 +102,7 @@ describe('example', () => {
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
 
-		expect(result.data).toHaveLength(11);
+		expect(result.data).toHaveLength(13);
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeFalsy();
 
@@ -110,7 +112,7 @@ describe('example', () => {
 
 		try {
 			
-			const nextCursor = data.pageInfo.cursor;
+			const nextCursor = data.pageInfo.lastCursor;
 	
 			pager.paginate({
 				data: data.original,
@@ -129,7 +131,7 @@ describe('example', () => {
 
 	it('should get back previous 16 items', () => {
 
-		const nextCursor = data.pageInfo.cursor;
+		const nextCursor = data.pageInfo.firstCursor;
 
 		const result = pager.paginate({
 			data: data.original,
@@ -144,7 +146,7 @@ describe('example', () => {
 
 		expect(result.data).toHaveLength(15);
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
-		expect(result.pageInfo.hasNextPage).toBeFalsy();
+		expect(result.pageInfo.hasNextPage).toBeTruthy();
 
 	});
 
