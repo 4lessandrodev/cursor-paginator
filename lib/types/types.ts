@@ -29,12 +29,20 @@ export interface IPaginateConfig {
 	pageSize: number;
 }
 
+export interface IPage {
+	current: number;
+	of: number;
+}
+
 export interface IPageInfo {
 	totalCount: number;
 	hasNextPage: boolean;
 	hasPreviousPage: boolean;
-	firstCursor?: string,
-	lastCursor?: string
+	sizePerPage: number;
+	currentItem: number;
+	page: IPage;
+	firstCursor?: string;
+	lastCursor?: string;
 }
 
 export interface IPaginate<T> {

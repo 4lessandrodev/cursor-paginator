@@ -22,6 +22,12 @@ describe('example', () => {
 			hasNextPage: false,
 			hasPreviousPage: false,
 			totalCount: 0,
+			currentItem: 0,
+			sizePerPage: 0,
+			page: {
+				current: 0,
+				of: 0,
+			},
 			firstCursor: undefined,
 			lastCursor: undefined
 		}
@@ -35,17 +41,18 @@ describe('example', () => {
 
 		const cursor = data.original[0].__cursor;
 
-		const result = pager.paginate<IUser>({
-			data: data.original,
-			params: {
-				before: cursor
-			}
-		}).toRest();
+		try {
+			
+			pager.paginate<IUser>({
+				data: data.original,
+				params: {
+					before: cursor
+				}
+			}).toRest();
 
-	expect(result.data).toHaveLength(1);
-	expect(result.data[0]).toEqual(data.original[0]);
-	expect(result.pageInfo.hasPreviousPage).toBeFalsy();
-	expect(result.pageInfo.hasNextPage).toBeTruthy();
+		} catch (error: any) {
+			expect(error.message).toBe('there is not data before cursor: 1');
+		}
 	
 });
 
@@ -102,7 +109,7 @@ describe('example', () => {
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
 
-		expect(result.data).toHaveLength(13);
+		expect(result.data).toHaveLength(11);
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeFalsy();
 
@@ -160,10 +167,10 @@ describe('example', () => {
 			}
 		}).toGql();
 
-		expect(result.data[0].node).toEqual(data.original[0]);
-		expect(result.data[0].cursor).toEqual(data.original[0].__cursor);
+		expect(result.data[0].node).toEqual(data.original[1]);
+		expect(result.data[0].cursor).toEqual(data.original[1].__cursor);
 		expect(result.data).toHaveLength(10);
-		expect(result.pageInfo.hasPreviousPage).toBeFalsy();
+		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeTruthy();
 
 	});

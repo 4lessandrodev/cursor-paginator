@@ -57,26 +57,30 @@
 </head>
 <body>
 
-	
 	<div class="btns">
 		<button onclick="handlePrev()" title="Goes to previous page on click">Prev</button>
 		<button onclick="handleNext()" title="Goes to next page on click">Next</button>
 		<input type="number" name="size" id="size" value="4" max="21" min="1"  title="Size per page">
 	</div>
+	<p id="page-info">Page info: </p>
 	
 	<div id="root"></div>
-	<!-- <script src="../bundle/index.min.js"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.0/bundle/index.min.js"></script>
+	<script src="../bundle/index.min.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.0/bundle/index.min.js"></script> -->
 	<script>
 
 		const root = document.getElementById('root');
 		const size = document.getElementById('size');
+		const pageDetails = document.getElementById('page-info');
 
 		// global state to pagination
 		let pageInfo = {
 			hasNextPage: true,
-			hasPreviousPage: false,
-			totalCount: 10,
+			hasPreviousPage: true,
+			totalCount: 21,
+			page: { current: 6, of: 11 },
+			currentItem: 4,
+			sizePerPage: 4,
 			firstCursor: 'cursor_1',
 			lastCursor: 'cursor_4',
 		};
@@ -225,6 +229,9 @@
 				root.innerHTML = root.innerHTML + element;
 			});
 
+			// handle page details
+			pageDetails.innerHTML = `Page: <b>${pageInfo.page.current}</b> of <b>${pageInfo.page.of}</b> Per Page: <b>${pageInfo.sizePerPage}</b> Current Item: <b>${pageInfo.currentItem}</b>`;
+
 		}
 
 		// paginate to backward
@@ -256,6 +263,9 @@
 				var element = `<p><img src="${rel.image}"><b>${rel.id}</b> ${rel.name}</p>`;
 				root.innerHTML = root.innerHTML + element;
 			});
+
+			// handle page details
+			pageDetails.innerHTML = `Page: <b>${pageInfo.page.current}</b> of <b>${pageInfo.page.of}</b> Per Page: <b>${pageInfo.sizePerPage}</b> Current Item: <b>${pageInfo.currentItem}</b>`;
 
 		}
 

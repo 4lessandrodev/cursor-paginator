@@ -57,10 +57,16 @@ describe('validation.util', () => {
 			const result = pager({ data: [] }).toRest();
 
 			expect(result.pageInfo).toEqual({
+				currentItem: 0,
 				firstCursor: undefined,
 				lastCursor: undefined,
 				hasNextPage: false,
 				hasPreviousPage: false,
+				page: {
+					current: 0,
+					of: 0
+				},
+				sizePerPage: 0,
 				totalCount: 0
 			});
 
@@ -69,15 +75,21 @@ describe('validation.util', () => {
 		it('should have hasNextPage and hasPreviousPage', () => {
 			
 			const originalData = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
-			const dataPayload = [{ id: '2' }, { id: '3' }];
+			const dataPayload = [{ id: '3' }, { id: '4' }];
 
 			const result = pager({ data: originalData, params: { after: '2', size: 2 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
-				firstCursor: '2',
-				lastCursor: '3',
+				currentItem: 3,
+				firstCursor: '3',
+				lastCursor: '4',
 				hasNextPage: true,
 				hasPreviousPage: true,
+				page: {
+					current: 2,
+					of: 3
+				},
+				sizePerPage: 2,
 				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
@@ -92,10 +104,16 @@ describe('validation.util', () => {
 			const result = pager({ data: originalData, params: { size: 3 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
+				currentItem: 1,
 				lastCursor: '3',
 				firstCursor: '1',
 				hasNextPage: true,
 				hasPreviousPage: false,
+				page: {
+					current: 1,
+					of: 2
+				},
+				sizePerPage: 3,
 				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
@@ -105,15 +123,21 @@ describe('validation.util', () => {
 		it('should have hasPreviousPage and not hasNextPage', () => {
 			
 			const originalData = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
-			const dataPayload = [{ id: '3' }, { id: '4' }, { id: '5' }];
+			const dataPayload = [{ id: '4' }, { id: '5' }];
 
 			const result = pager({ data: originalData, params: { after: '3', size: 3 } }).toRest();
 
 			expect(result.pageInfo).toEqual({
+				currentItem: 4,
 				lastCursor: '5',
-				firstCursor: '3',
+				firstCursor: '4',
 				hasNextPage: false,
 				hasPreviousPage: true,
+				page: {
+					current: 2,
+					of: 2
+				},
+				sizePerPage: 3,
 				totalCount: 5
 			});
 			expect(result.data).toEqual(dataPayload);
