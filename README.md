@@ -4,7 +4,8 @@ This lib paginate any data as array of records using id attribute as cursor.
 
 > All record must have id attribute or you must provide a custom cursorKey.
 
-Install 
+Node
+ Install
 
 ```shell
 
@@ -16,11 +17,23 @@ $ yarn add ts-paginate
 
 ```
 
-You also may use on browser 
+You also may use on browser from bundle
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.1/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.2/bundle/index.min.js"></script>
+
+```
+
+Or from skypack
+
+```html
+
+<script type="module">
+
+	import { Pager } from 'https://cdn.skypack.dev/ts-paginate';
+
+</script>
 
 ```
 
