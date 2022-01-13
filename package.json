@@ -1,11 +1,18 @@
 {
 	"name": "ts-paginate",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"description": "This package provide pagination to any data records that has id attribute",
 	"main": "dist/index.js",
+	"module": "bundle/index.min.js",
 	"types": "dist/index.d.ts",
 	"license": "ISC",
 	"author": "Alessandro Dev",
+	"exports": {
+		"node": "./dist/index.js",
+		"require": "./bundle/index.min.js",
+		"import": "./dist/index.js",
+		"default": "./dist/index.js"
+	},
 	"keywords": [
 		"Pagination",
 		"Nodes",
@@ -24,13 +31,13 @@
 		"test": "jest --runInBand",
 		"prerun:example": "yarn build",
 		"prebuild": "rimraf ./dist ./bundle && yarn check:circular-deps",
-		"postbuild": "yarn webpack",
+		"postbuild": "yarn webpack && yarn package-check && yarn test",
 		"build": "tsc",
 		"check:circular-deps": "madge --circular --extensions ts ./lib",
-		"run:example": "ts-node examples/simple-example.ts",
-		"bundle": "yarn browserify --entry ./dist/index.js --outfile ./bundle/index.min.js"
+		"run:example": "ts-node examples/simple-example.ts"
 	},
 	"devDependencies": {
+		"@skypack/package-check": "^0.2.2",
 		"@types/jest": "^27.4.0",
 		"@types/node": "^17.0.7",
 		"babel-loader": "^8.2.3",

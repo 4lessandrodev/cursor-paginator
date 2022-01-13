@@ -65,13 +65,17 @@
 	<p id="page-info">Page info: </p>
 	
 	<div id="root"></div>
+	
+	<!-- lib from local dev -->
 	<!-- <script src="../bundle/index.min.js"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.1/bundle/index.min.js"></script>
-	<script>
+	<script type="module">
 
+		// get production lib from skypack
+		import { Pager } from 'https://cdn.skypack.dev/ts-paginate';
+
+		const pageDetails = document.getElementById('page-info');
 		const root = document.getElementById('root');
 		const size = document.getElementById('size');
-		const pageDetails = document.getElementById('page-info');
 
 		// global state to pagination
 		let pageInfo = {
@@ -193,9 +197,6 @@
 				image: 'https://c.tenor.com/ghBwuN542TcAAAAC/rock-lee-vs-gaara-fight.gif' 
 			},
 		];
-
-		// get lib from index.min.js
-		const Pager = this.tsPaginate.Pager;
 
 		const paginate = new Pager().paginate;
 
