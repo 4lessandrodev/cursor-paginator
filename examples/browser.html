@@ -4,93 +4,24 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<style>
-		body{
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			font-family: sans-serif;
-			margin: 2% 20%;
-			background-color: #ededed;
-		}
-		p {
-			display: flex;
-			align-items: center;
-			text-align: center;
-			padding: 1rem;
-			border-radius: 15px;
-			justify-content: space-between;
-			background-color: white;
-			max-height: 180px;
-			min-width: 500px;
-		}
-
-		p:hover {
-			cursor: pointer;
-			box-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.445);
-			background-color: black;
-			color: white;
-		}
-
-		img {
-			max-width: 200px;
-			min-height: 180px;
-			max-height: 180px;
-			border-radius: 50%;
-		}
-
-		button {
-			color: rgb(22, 22, 87);
-			padding: 1rem 4rem;
-		}
-
-		.btns {
-			display: flex;
-			justify-content: center;
-		}
-		input[type='number'] {
-			text-align: center;
-		}
-	</style>
+	<title>ts-paginate</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+	<div id="page-info">Page info: </div>
 	<div class="btns">
-		<button onclick="handlePrev()" title="Goes to previous page on click">Prev</button>
-		<button onclick="handleNext()" title="Goes to next page on click">Next</button>
+		<button title="Goes to previous page on click" id="btn-prev">Prev</button>
+		<button title="Goes to next page on click" id="btn-next">Next</button>
 		<input type="number" name="size" id="size" value="4" max="21" min="1"  title="Size per page">
 	</div>
-	<p id="page-info">Page info: </p>
 	
 	<div id="root"></div>
-	
-	<!-- lib from local dev -->
-	<!-- <script src="../bundle/index.min.js"></script> -->
+
 	<script type="module">
 
-		// get production lib from skypack
-		import { Pager } from 'https://cdn.skypack.dev/ts-paginate';
-
-		const pageDetails = document.getElementById('page-info');
-		const root = document.getElementById('root');
-		const size = document.getElementById('size');
-
-		// global state to pagination
-		let pageInfo = {
-			hasNextPage: true,
-			hasPreviousPage: true,
-			totalCount: 21,
-			page: { current: 6, of: 11 },
-			currentItem: 4,
-			sizePerPage: 4,
-			firstCursor: 'cursor_1',
-			lastCursor: 'cursor_4',
-		};
-
-		// data simulation to paginate
-		const data = [
+		// fake data to paginate
+ 		const data = [
 			{ 
 				id: 'cursor_1', 
 				name: 'Naruto Uzumaki',
@@ -198,7 +129,49 @@
 			},
 		];
 
+		// import lib from production
+		import { Pager } from 'https://cdn.skypack.dev/ts-paginate';
+
+		const pageDetails = document.getElementById('page-info');
+		const root = document.getElementById('root');
+		const size = document.getElementById('size');
+
+		const btnNext = document.getElementById('btn-next');
+		const btnPrev = document.getElementById('btn-prev');
+
+		// global state to pagination
+		let pageInfo = {
+			hasNextPage: true,
+			hasPreviousPage: true,
+			totalCount: 21,
+			page: { current: 6, of: 11 },
+			currentItem: 4,
+			sizePerPage: 4,
+			firstCursor: 'cursor_1',
+			lastCursor: 'cursor_4',
+		};
+
 		const paginate = new Pager().paginate;
+
+		// create card element
+		const createCardElement = (rel) => {
+			var element = `<div class="container">
+					<img src="${rel.image}">
+					<div class="info"><p><b>${rel.id}</b></p><p>${rel.name}</p></div>
+			</div>`;
+			return element;
+		}
+
+		// create page details element
+		const createPageDetailElement = (pageInfo) => {
+			const element = `
+				<div><p>[ Page: <b>${pageInfo.page.current}</b></p></div>
+				<div><p> Of: <b>${pageInfo.page.of}</b> ]-</p></div>
+				<div><p>[ Per page: <b>${pageInfo.sizePerPage}</b> ]-</p></div>
+				<div><p>[ Current Item: <b>${pageInfo.currentItem}</b> ]</p></div>
+			`;
+			return element;
+		}
 
 		// Paginate to next page
 		const handleNext = () => {
@@ -226,12 +199,12 @@
 
 			// handle result
 			result.data.map((rel) => {
-				var element = `<p><img src="${rel.image}"><b>${rel.id}</b> ${rel.name}</p>`;
+				const element = createCardElement(rel);
 				root.innerHTML = root.innerHTML + element;
 			});
 
 			// handle page details
-			pageDetails.innerHTML = `Page: <b>${pageInfo.page.current}</b> of <b>${pageInfo.page.of}</b> Per Page: <b>${pageInfo.sizePerPage}</b> Current Item: <b>${pageInfo.currentItem}</b>`;
+			pageDetails.innerHTML = createPageDetailElement(pageInfo);
 
 		}
 
@@ -261,17 +234,19 @@
 
 			// handle result
 			result.data.map((rel) => {
-				var element = `<p><img src="${rel.image}"><b>${rel.id}</b> ${rel.name}</p>`;
+				const element = createCardElement(rel);
 				root.innerHTML = root.innerHTML + element;
 			});
 
 			// handle page details
-			pageDetails.innerHTML = `Page: <b>${pageInfo.page.current}</b> of <b>${pageInfo.page.of}</b> Per Page: <b>${pageInfo.sizePerPage}</b> Current Item: <b>${pageInfo.currentItem}</b>`;
+			pageDetails.innerHTML = createPageDetailElement(pageInfo);
 
 		}
 
 		// start handle next page
 		handleNext();
+		btnNext.addEventListener('click', handleNext);
+		btnPrev.addEventListener('click', handlePrev);
 
 	</script>
 </body>
