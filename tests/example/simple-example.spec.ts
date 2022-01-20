@@ -82,7 +82,7 @@ describe('example', () => {
 			data: data.original,
 			params: { size: 15 }
 		}).toRest();
-		
+
 		data.payload = result.data;
 		data.pageInfo = result.pageInfo;
 
@@ -210,6 +210,28 @@ describe('example', () => {
 		expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		expect(result.pageInfo.hasNextPage).toBeFalsy();
 		expect(lastCursor).toBe(data.original[data.original.length -1].id);
+
+	});
+
+	it('should return all data if provide total size', () => {
+
+		const result = pager.paginate({
+			data: data.original,
+			params: {
+				size: data.original.length
+			}
+		}).toRest();
+
+		const hasPreviousPage = result.pageInfo.hasPreviousPage;
+		const hasNextPage = result.pageInfo.hasNextPage;
+		const firstCursor = result.pageInfo.firstCursor;
+		const lastCursor = result.pageInfo.lastCursor;
+
+		expect(result.data).toHaveLength(41);
+		expect(hasPreviousPage).toBeFalsy();
+		expect(hasNextPage).toBeFalsy();
+		expect(firstCursor).toBe('1');
+		expect(lastCursor).toBe('41');
 
 	});
 	

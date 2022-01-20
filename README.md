@@ -172,3 +172,24 @@ const result = paginate<IUser>({ data: usersData }).toRest();
 const result = paginate<IUser>({ data: usersData }).toGql();
 
 ```
+
+## Change size on nested pages 
+
+If the amount of records to be displayed changes, first request an update of the value, passing only the value and then navigate informing the cursor
+
+```ts
+
+import { Pager } from 'ts-paginate';
+
+const { paginate } = new Pager();
+
+// I am on page 3
+const pages = paginate({ data, params: { size: 15, after: 'cursor_20' } });
+
+// I want to change size for 5 items per page
+paginate({ data, params:{ size: 5 }});
+
+// Now you navigate for page 3
+paginate({ data, params:{ size: 5, after: 'cursor_10' }})
+
+```
