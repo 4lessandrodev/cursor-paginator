@@ -21,7 +21,7 @@ You also may use on browser from bundle
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.2/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.3/bundle/index.min.js"></script>
 
 ```
 
@@ -183,13 +183,16 @@ import { Pager } from 'ts-paginate';
 
 const { paginate } = new Pager();
 
-// I am on page 3
-const pages = paginate({ data, params: { size: 15, after: 'cursor_20' } });
+// Request first page with 15 items per page.
+const page1a = paginate({ data, params:{ size: 15 }});
 
-// I want to change size for 5 items per page
-paginate({ data, params:{ size: 5 }});
+// Next > Next: I am on page 3
+const page3a = paginate({ data, params: { size: 15, after: 'cursor_30' } });
 
-// Now you navigate for page 3
-paginate({ data, params:{ size: 5, after: 'cursor_10' }})
+// I want to change size to 5 items per page
+const page1b = paginate({ data, params:{ size: 5 }});
+
+// Next > Next: Now you navigate to page 3. Cursor reference is cursor_10
+const page3b = paginate({ data, params:{ size: 5, after: 'cursor_10' }});
 
 ```
