@@ -13,7 +13,7 @@
 	<div class="btns">
 		<button title="Goes to previous page on click" id="btn-prev">Prev</button>
 		<button title="Goes to next page on click" id="btn-next">Next</button>
-		<input type="number" name="size" id="size" value="4" max="21" min="1"  title="Size per page">
+		<input type="number" name="size" id="size" value="3" max="21" min="1"  title="Size per page">
 	</div>
 	
 	<div id="root"></div>
@@ -142,13 +142,13 @@
 		// global state to pagination
 		let pageInfo = {
 			hasNextPage: true,
-			hasPreviousPage: true,
+			hasPreviousPage: false,
 			totalCount: 21,
-			page: { current: 6, of: 11 },
-			currentItem: 4,
-			sizePerPage: 4,
+			page: { current: 1, of: 7 },
+			currentItem: 1,
+			sizePerPage: 3,
 			firstCursor: 'cursor_1',
-			lastCursor: 'cursor_4',
+			lastCursor: 'cursor_3',
 		};
 
 		const paginate = new Pager().paginate;
@@ -176,13 +176,12 @@
 		// Paginate to next page
 		const handleNext = () => {
 
-			console.log(pageInfo);
-
+			
 			// ensure It has next page
 			if (!pageInfo.hasNextPage) {
 				return;
 			}
-
+			
 			// get pagination
 			const result = paginate({
 				data,
@@ -191,33 +190,33 @@
 					after: pageInfo.lastCursor 
 				}
 			}).toRest();
-
+			
 			root.innerHTML = '';
-
+			
 			// update state
 			pageInfo = result.pageInfo;
-
+			
 			// handle result
 			result.data.map((rel) => {
 				const element = createCardElement(rel);
 				root.innerHTML = root.innerHTML + element;
 			});
-
+			
 			// handle page details
 			pageDetails.innerHTML = createPageDetailElement(pageInfo);
+			console.log(pageInfo);
 
 		}
 
 		// paginate to backward
 		const handlePrev = () => {
 
-			console.log(pageInfo);
-
+			
 			// ensure It has a previous page
 			if (!pageInfo.hasPreviousPage) {
 				return;
 			}
-
+			
 			// paginate data
 			const result = paginate({
 				data,
@@ -226,9 +225,9 @@
 					before: pageInfo.firstCursor 
 				}
 			}).toRest();
-
+			
 			root.innerHTML = '';
-
+			
 			// update global state
 			pageInfo = result.pageInfo;
 
@@ -237,14 +236,50 @@
 				const element = createCardElement(rel);
 				root.innerHTML = root.innerHTML + element;
 			});
-
+			
 			// handle page details
 			pageDetails.innerHTML = createPageDetailElement(pageInfo);
+			console.log(pageInfo);
 
 		}
 
+		const handleFirstPage = () => {
+			
+			if(size.value < 1 || size.value === ''){
+				return;
+			}
+
+			// paginate data without cursor
+			const result = paginate({
+				data,
+				params: { 
+					size: parseInt(size.value)
+				}
+			}).toRest();
+			
+			root.innerHTML = '';
+			
+			// update global state
+			pageInfo = result.pageInfo;
+			
+			// handle result
+			result.data.map((rel) => {
+				const element = createCardElement(rel);
+				root.innerHTML = root.innerHTML + element;
+			});
+			
+			// handle page details
+			pageDetails.innerHTML = createPageDetailElement(pageInfo);
+			console.log(pageInfo);
+		}
+
+		// handle first page on change size per page
+		size.addEventListener('keyup', () => {
+			handleFirstPage();
+		});
+
 		// start handle next page
-		handleNext();
+		handleFirstPage();
 		btnNext.addEventListener('click', handleNext);
 		btnPrev.addEventListener('click', handlePrev);
 

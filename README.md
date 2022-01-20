@@ -21,7 +21,7 @@ You also may use on browser from bundle
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.2/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.3/bundle/index.min.js"></script>
 
 ```
 
@@ -170,5 +170,29 @@ const result = paginate<IUser>({ data: usersData }).toRest();
 // or 
 
 const result = paginate<IUser>({ data: usersData }).toGql();
+
+```
+
+## Change size on nested pages 
+
+If the amount of records to be displayed changes, first request an update of the value, passing only the value and then navigate informing the cursor
+
+```ts
+
+import { Pager } from 'ts-paginate';
+
+const { paginate } = new Pager();
+
+// Request first page with 15 items per page.
+const page1a = paginate({ data, params:{ size: 15 }});
+
+// Next > Next: I am on page 3
+const page3a = paginate({ data, params: { size: 15, after: 'cursor_30' } });
+
+// I want to change size to 5 items per page
+const page1b = paginate({ data, params:{ size: 5 }});
+
+// Next > Next: Now you navigate to page 3. Cursor reference is cursor_10
+const page3b = paginate({ data, params:{ size: 5, after: 'cursor_10' }});
 
 ```

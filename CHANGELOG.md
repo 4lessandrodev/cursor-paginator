@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.2.3 - 2022-01-20
+
+### Changed
+
+- Reset size criterial.
+
+---
 ### 1.2.2 - 2022-01-12
 
 ### Changed

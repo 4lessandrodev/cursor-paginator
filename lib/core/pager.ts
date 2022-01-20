@@ -277,6 +277,25 @@ export class Pager implements IPager {
 				}
 			}
 		}
+		
+		if (this.pageInfo.totalCount <= this.pageInfo.sizePerPage) {
+			return {
+				data: this.originalData,
+				pageInfo: {
+					hasNextPage: false,
+					hasPreviousPage: false,
+					page: {
+						current: 1,
+						of: 1
+					},
+					currentItem: 1,
+					sizePerPage: this.pageInfo.totalCount,
+					totalCount: this.pageInfo.totalCount,
+					firstCursor: this.originalData[0]?.[this.config.cursorKey],
+					lastCursor: this.originalData[this.originalData.length - 1]?.[this.config.cursorKey],
+				}
+			}
+		}
 
 		if (isBefore) {
 			this.backwardFlow();

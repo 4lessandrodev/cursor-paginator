@@ -216,13 +216,13 @@ describe('paginate.ts', () => {
 	it('should throw if try to get data before first cursor', () => {
 
 		
-		const data = [{ id: '1' }];
+		const data = [{ id: '1' },{ id: '2' },{ id: '4' },{ id: '5' }];
 		expect.assertions(1);
 		try {
 			paginate({
 				data,
 				params: {
-					size: 3,
+					size: 1,
 					before: '1'
 				}
 			}).toRest();
