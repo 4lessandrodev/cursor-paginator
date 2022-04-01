@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 ...
 
 ---
+### 1.2.4 - 2022-04-01
+
+### Fixed
+
+deps: update dependencies
+
+---
 ### 1.2.3 - 2022-01-20
 
 ### Changed

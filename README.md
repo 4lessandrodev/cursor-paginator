@@ -21,7 +21,7 @@ You also may use on browser from bundle
 
 ```html
 
-<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.3/bundle/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ts-paginate@1.2.4/bundle/index.min.js"></script>
 
 ```
 
